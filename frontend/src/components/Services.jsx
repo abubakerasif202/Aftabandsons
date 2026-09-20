@@ -22,34 +22,47 @@ const Services = () => (
         </h2>
       </Reveal>
 
-      <div className="mt-16 grid grid-cols-1 gap-px border border-[#C0C0C0]/15 bg-[#C0C0C0]/15 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {SERVICES.map((service, i) => (
           <Reveal key={service.id} delay={i * 0.1} className="h-full">
             <a
               href="#contact"
+              aria-label={`Enquire about ${service.title}`}
               data-testid={`service-card-${service.id}`}
-              className="group flex h-full flex-col bg-[#0A0A0A] transition-colors duration-300 hover:bg-[#141414]"
+              className="group relative flex h-full flex-col border border-[#C0C0C0]/15 bg-[#141414] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D4AF37]/50 hover:shadow-[0_12px_30px_rgba(0,0,0,0.8)]"
             >
+              {/* Top accent indicator */}
+              <div className="absolute top-0 inset-x-0 h-[2px] bg-transparent transition-colors duration-300 group-hover:bg-gradient-to-r group-hover:from-[#C81010] group-hover:via-[#D4AF37] group-hover:to-[#C81010]" />
+
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
                   src={service.image}
                   alt={`Aftab & Sons Transport — ${service.title}`}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent opacity-90" />
+                <span className="absolute top-3 right-4 font-display text-3xl font-bold tracking-wider text-[#C0C0C0]/30 transition-colors duration-300 group-hover:text-[#D4AF37]">
+                  0{i + 1}
+                </span>
               </div>
-              <div className="flex flex-1 flex-col p-7">
-                <h3 className="font-display text-2xl tracking-wider text-white uppercase">
+
+              <div className="flex flex-1 flex-col p-5 sm:p-7">
+                <h3 className="font-display text-2xl tracking-wider text-white uppercase transition-colors duration-200 group-hover:text-white">
                   {service.title}
                 </h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-[#A1A1AA]">
                   {service.description}
                 </p>
-                <span className="mt-6 inline-flex items-center gap-2 text-xs font-bold tracking-[0.25em] text-[#D4AF37] uppercase">
-                  Enquire
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
+                <div className="mt-6 flex items-center justify-between border-t border-[#C0C0C0]/10 pt-4">
+                  <span className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.25em] text-[#D4AF37] uppercase transition-colors duration-200 group-hover:text-white">
+                    Enquire
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#D4AF37]" />
+                  </span>
+                  <span className="text-[10px] tracking-[0.2em] text-[#A1A1AA]/60 uppercase">
+                    Commercial
+                  </span>
+                </div>
               </div>
             </a>
           </Reveal>

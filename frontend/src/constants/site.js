@@ -12,6 +12,7 @@ export const SITE = {
   phoneHref: "tel:+61448747518",
   whatsappHref: "https://wa.me/61448747518",
   email: "admin@aftabandsons.com.au",
+  web3formsKey: process.env.REACT_APP_WEB3FORMS_KEY || "b0b1f017-828a-4355-83ae-4b852e0cc740",
 };
 
 export const IMAGES = {

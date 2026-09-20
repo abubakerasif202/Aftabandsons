@@ -45,11 +45,11 @@ const About = () => (
             From local deliveries to interstate freight, our focus is practical:
             clear communication, careful handling and dependable transport.
           </p>
-          <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4 border-t border-[#C0C0C0]/15 pt-8">
-            {["Truck Transport", "B-Double Freight", "Local", "Interstate"].map((word) => (
+          <div className="mt-10 flex flex-wrap gap-2.5 sm:gap-3 border-t border-[#C0C0C0]/15 pt-8">
+            {["Truck Transport", "B-Double Freight", "Local Deliveries", "Interstate Freight"].map((word) => (
               <span
                 key={word}
-                className="font-display text-lg tracking-[0.2em] text-[#C0C0C0] uppercase"
+                className="border border-[#C0C0C0]/15 bg-[#141414] px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-semibold tracking-[0.18em] sm:tracking-[0.2em] text-[#C0C0C0] uppercase transition-all duration-200 hover:border-[#D4AF37]/50 hover:text-white"
               >
                 {word}
               </span>
@@ -62,7 +62,7 @@ const About = () => (
             <Reveal key={owner.name} delay={0.15 + i * 0.15} className={i === 1 ? "sm:mt-12" : ""}>
               <figure
                 data-testid={`about-owner-${i + 1}`}
-                className="group border border-[#C0C0C0]/15 bg-[#141414]"
+                className="group relative border border-[#C0C0C0]/15 bg-[#141414] transition-all duration-300 hover:-translate-y-1 hover:border-[#D4AF37]/50 hover:shadow-[0_12px_30px_rgba(0,0,0,0.8)]"
               >
                 <div className="overflow-hidden">
                   <img
@@ -73,13 +73,17 @@ const About = () => (
                     className="aspect-[4/5] w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
-                <figcaption className="border-t border-[#C0C0C0]/15 px-5 py-4">
-                  <span className="block text-sm font-bold text-white">
+                <figcaption className="border-t border-[#C0C0C0]/15 bg-[#0A0A0A] p-3 sm:px-5 sm:py-4">
+                  <span className="block text-xs sm:text-sm font-bold text-white transition-colors group-hover:text-[#D4AF37]">
                     {owner.name}
                   </span>
-                  {owner.role && (
-                    <span className="mt-1 block text-xs font-bold tracking-[0.3em] text-[#D4AF37] uppercase">
+                  {owner.role ? (
+                    <span className="mt-1 block text-[10px] sm:text-xs font-bold tracking-[0.2em] sm:tracking-[0.3em] text-[#D4AF37] uppercase">
                       {owner.role}
+                    </span>
+                  ) : (
+                    <span className="mt-1 block text-[10px] sm:text-xs font-bold tracking-[0.2em] sm:tracking-[0.3em] text-[#A1A1AA]/60 uppercase">
+                      Management
                     </span>
                   )}
                 </figcaption>

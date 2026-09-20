@@ -19,3 +19,94 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #d4af37;
 }
+
+/* Industrial cinematic animations */
+@keyframes pulse-glow {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+@keyframes shine-sweep {
+    0% {
+        transform: translateX(-100%) skewX(-15deg);
+    }
+    100% {
+        transform: translateX(200%) skewX(-15deg);
+    }
+}
+
+@keyframes radar-ping {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+
+.animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-radar-ping {
+    animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Hover shine utility for primary CTA buttons */
+.btn-shine-overlay {
+    position: relative;
+    overflow: hidden;
+}
+.btn-shine-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.18),
+        transparent
+    );
+    transform: skewX(-20deg);
+    transition: none;
+    pointer-events: none;
+}
+.btn-shine-overlay:hover::after {
+    animation: shine-sweep 0.75s ease-out;
+}
+
+/* Card lift and border highlight */
+.industrial-card {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease,
+                background-color 0.25s ease,
+                box-shadow 0.25s ease;
+}
+.industrial-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-pulse-glow,
+    .animate-radar-ping,
+    .btn-shine-overlay:hover::after {
+        animation: none !important;
+    }
+    .industrial-card:hover {
+        transform: none !important;
+    }
+}
+

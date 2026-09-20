@@ -1,5 +1,6 @@
-import { motion, useReducedMotion } from "framer-motion";
-import { Truck, Package, Route } from "lucide-react";
+import { useRef } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { Truck, Package, Route, Navigation } from "lucide-react";
 import Reveal from "./motion/Reveal";
 
 const POINTS = [
@@ -22,6 +23,8 @@ const POINTS = [
 
 const Capability = () => {
   const reduce = useReducedMotion();
+  const visualRef = useRef(null);
+  const isVisualInView = useInView(visualRef, { margin: "50px" });
 
   return (
     <section
@@ -47,16 +50,16 @@ const Capability = () => {
               do, supporting commercial freight from pickup through delivery.
             </p>
 
-            <div className="mt-12 space-y-8">
+            <div className="mt-12 space-y-5">
               {POINTS.map(({ icon: Icon, title, text }, i) => (
                 <Reveal key={title} delay={0.1 + i * 0.1}>
                   <div
                     data-testid={`capability-point-${i}`}
-                    className="flex gap-5 border-l-2 border-[#C81010] pl-6"
+                    className="group flex gap-5 border-l-2 border-[#C81010] bg-[#0A0A0A]/40 p-5 transition-all duration-200 hover:border-[#D4AF37] hover:bg-[#0A0A0A] hover:translate-x-1"
                   >
-                    <Icon className="mt-1 h-6 w-6 shrink-0 text-[#D4AF37]" aria-hidden="true" />
+                    <Icon className="mt-1 h-6 w-6 shrink-0 text-[#D4AF37] transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
                     <div>
-                      <h3 className="font-display text-xl tracking-wider text-white uppercase">
+                      <h3 className="font-display text-xl tracking-wider text-white uppercase transition-colors duration-200 group-hover:text-[#D4AF37]">
                         {title}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-[#A1A1AA]">
@@ -71,19 +74,28 @@ const Capability = () => {
 
           <Reveal delay={0.2} className="lg:sticky lg:top-32">
             <div
+              ref={visualRef}
               data-testid="capability-route-visual"
-              className="relative border border-[#C0C0C0]/15 bg-[#0A0A0A] p-8 sm:p-12"
+              className="relative border border-[#C0C0C0]/15 bg-[#0A0A0A] p-6 sm:p-12 shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
             >
-              <p className="text-xs font-bold tracking-[0.4em] text-[#C0C0C0] uppercase">
-                Pickup to Delivery
-              </p>
+              <div className="flex items-center justify-between border-b border-[#C0C0C0]/10 pb-4">
+                <p className="flex items-center gap-2 text-xs font-bold tracking-[0.4em] text-[#C0C0C0] uppercase">
+                  <Navigation className="h-3.5 w-3.5 text-[#D4AF37]" />
+                  Pickup to Delivery
+                </p>
+                <span className="text-[11px] font-bold tracking-widest text-[#D4AF37] uppercase">
+                  Australian Network
+                </span>
+              </div>
+
               <svg
                 viewBox="0 0 400 320"
-                className="mt-6 w-full"
+                className="mt-6 w-full overflow-visible"
                 role="img"
                 aria-label="Freight route illustration from pickup to delivery"
               >
                 <path
+                  id="freight-route-curve"
                   d="M30 260 C 90 180, 140 280, 200 190 S 320 120, 370 60"
                   fill="none"
                   stroke="#C0C0C0"
@@ -101,19 +113,53 @@ const Capability = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 2.2, ease: "easeInOut" }}
                 />
+
+                {/* Animated transit pulse along route curve: only active when in view and motion is enabled */}
+                {!reduce && isVisualInView && (
+                  <g>
+                    <circle r="8" fill="#D4AF37" fillOpacity="0.25">
+                      <animateMotion
+                        dur="5s"
+                        repeatCount="indefinite"
+                        path="M30 260 C 90 180, 140 280, 200 190 S 320 120, 370 60"
+                      />
+                    </circle>
+                    <circle r="4" fill="#D4AF37">
+                      <animateMotion
+                        dur="5s"
+                        repeatCount="indefinite"
+                        path="M30 260 C 90 180, 140 280, 200 190 S 320 120, 370 60"
+                      />
+                    </circle>
+                  </g>
+                )}
+
+                {/* Pickup node */}
                 <circle cx="30" cy="260" r="7" fill="#D4AF37" />
+                <circle cx="30" cy="260" r="14" fill="#D4AF37" fillOpacity="0.2" />
+
+                {/* Midpoint waypoint */}
+                <circle cx="200" cy="190" r="4" fill="#C0C0C0" />
+                <text x="170" y="215" fill="#A1A1AA" fontSize="9" letterSpacing="1.5">
+                  TRANSIT
+                </text>
+
+                {/* Delivery node */}
                 <circle cx="370" cy="60" r="7" fill="#C81010" />
-                <text x="30" y="292" fill="#C0C0C0" fontSize="11" letterSpacing="2">
+                <circle cx="370" cy="60" r="14" fill="#C81010" fillOpacity="0.2" />
+
+                <text x="20" y="295" fill="#C0C0C0" fontSize="11" letterSpacing="2" fontWeight="bold">
                   PICKUP
                 </text>
-                <text x="322" y="44" fill="#C0C0C0" fontSize="11" letterSpacing="2">
+                <text x="312" y="44" fill="#C0C0C0" fontSize="11" letterSpacing="2" fontWeight="bold">
                   DELIVERY
                 </text>
               </svg>
-              <p className="mt-6 border-t border-[#C0C0C0]/10 pt-6 text-sm leading-relaxed text-[#A1A1AA]">
-                Freight transport capability for business loads, including
-                local delivery work and interstate B-double freight.
-              </p>
+
+              <div className="mt-6 flex items-center justify-between border-t border-[#C0C0C0]/10 pt-6 text-xs text-[#A1A1AA]">
+                <span>Commercial Freight Transit</span>
+                <span className="text-[#D4AF37] font-semibold tracking-wider">DIRECT LINEHAUL</span>
+              </div>
             </div>
           </Reveal>
         </div>

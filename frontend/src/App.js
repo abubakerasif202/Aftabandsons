@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import MobileActions from "@/components/MobileActions";
 
 const LandingPage = () => (
-  <div className="min-h-screen bg-[#0A0A0A] pb-14 text-white antialiased lg:pb-0">
+  <div className="min-h-screen bg-[#0A0A0A] pb-28 text-white antialiased lg:pb-0">
     <Header />
     <main id="main-content" tabIndex="-1">
       <Hero />
@@ -28,7 +28,7 @@ const LandingPage = () => (
 
 function App() {
   return (
-    <div className="App">
+    <div className="App grain">
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
