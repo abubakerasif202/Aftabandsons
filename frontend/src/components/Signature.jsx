@@ -24,7 +24,7 @@ const Signature = () => {
       >
         <img
           src={IMAGES.signature}
-          alt="Aerial view of a highway cutting through the Australian outback"
+          alt="Aftab & Sons Transport B-double crossing an open outback highway at sunset"
           loading="lazy"
           className="h-full w-full object-cover"
         />

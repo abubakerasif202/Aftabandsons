@@ -17,8 +17,7 @@ export const SITE = {
 
 export const IMAGES = {
   hero: "/assets/fleet-convoy.jpg",
-  signature:
-    "https://images.pexels.com/photos/19751848/pexels-photo-19751848.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  signature: "/assets/fleet-outback.jpg",
   owner1: "/assets/owner-1.png",
   owner2: "/assets/owner-2.png",
 };
