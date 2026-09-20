@@ -8,7 +8,7 @@ import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 import { SITE, SERVICE_OPTIONS } from "../constants/site";
 
-const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+const API_BASE_URL = (process.env.REACT_APP_BACKEND_URL || "").replace(/\/$/, "");
 
 const initialForm = {
   name: "",
@@ -76,19 +76,6 @@ const Contact = () => {
     event.preventDefault();
     if (status === "sending" || submittingRef.current || !validate()) return;
 
-    const accessKey =
-      process.env.REACT_APP_WEB3FORMS_KEY ||
-      process.env.REACT_APP_WEB3FORMS_ACCESS_KEY ||
-      SITE.web3formsKey;
-
-    if (!accessKey) {
-      toast.error("Web3Forms key required", {
-        description:
-          "Please configure your Web3Forms access key (REACT_APP_WEB3FORMS_KEY).",
-      });
-      return;
-    }
-
     // Botcheck honeypot: silently ignore bot submissions
     if (form.botcheck) {
       setForm(initialForm);
@@ -101,17 +88,14 @@ const Contact = () => {
 
     try {
       const response = await axios.post(
-        WEB3FORMS_ENDPOINT,
+        `${API_BASE_URL}/api/enquiries`,
         {
-          access_key: accessKey,
           name: form.name.trim(),
           email: form.email.trim(),
-          phone: form.phone.trim() || "Not provided",
+          phone: form.phone.trim(),
           service: form.service,
           message: form.message.trim(),
-          botcheck: form.botcheck,
-          subject: `New Freight Quote Enquiry - ${form.service} (${form.name.trim()})`,
-          from_name: "Aftab & Sons Transport Website",
+          website: form.botcheck,
         },
         {
           headers: {
@@ -122,7 +106,7 @@ const Contact = () => {
         }
       );
 
-      if (response.data && response.data.success) {
+      if (response.status === 201 && response.data?.status === "received") {
         setForm(initialForm);
         setErrors({});
         setStatus("sent");
@@ -134,13 +118,11 @@ const Contact = () => {
       }
     } catch (err) {
       setStatus("idle");
-      let desc = "Please try again, or contact us directly via phone or WhatsApp.";
+      let desc = "Please try again, or contact us directly by phone or WhatsApp.";
       if (err.code === "ECONNABORTED") {
-        desc = "Request timed out. Please check your connection or call us directly.";
-      } else if (err.response?.data?.message) {
-        desc = err.response.data.message;
-      } else if (err.message) {
-        desc = err.message;
+        desc = "The request timed out. Please check your connection or call us directly.";
+      } else if (err.response?.status === 503) {
+        desc = "The enquiry service is temporarily unavailable. Please call or WhatsApp us directly.";
       }
       toast.error("Enquiry not sent", { description: desc });
     } finally {
@@ -180,6 +162,7 @@ const Contact = () => {
               onSubmit={onSubmit}
               noValidate
               className="mt-10 space-y-6"
+              aria-busy={status === "sending"}
             >
               <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
                 <Label htmlFor="quote-botcheck">Website</Label>
@@ -358,7 +341,7 @@ const Contact = () => {
                   className="flex items-center gap-3 border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-4 text-sm text-[#D4AF37]"
                 >
                   <CheckCircle2 className="h-5 w-5 shrink-0 text-[#D4AF37]" />
-                  <span>Enquiry received — thanks, our freight team will be in touch shortly.</span>
+                  <span>Enquiry received — we will contact you using the details provided.</span>
                 </div>
               )}
             </form>

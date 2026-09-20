@@ -26,6 +26,10 @@ const Signature = () => {
           src={IMAGES.signature}
           alt="Aftab & Sons Transport B-double crossing an open outback highway at sunset"
           loading="lazy"
+          decoding="async"
+          width="1774"
+          height="887"
+          sizes="100vw"
           className="h-full w-full object-cover"
         />
       </motion.div>

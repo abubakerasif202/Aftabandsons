@@ -5,14 +5,12 @@ const OWNERS = [
   {
     image: IMAGES.owner1,
     name: "Muhammad Samar Aftab",
-    role: null,
     alt: "Muhammad Samar Aftab of Aftab & Sons Transport",
   },
   {
     image: IMAGES.owner2,
     name: "Muhammad Umer Aftab",
-    role: "Director",
-    alt: "Muhammad Umer Aftab, Director of Aftab & Sons Transport",
+    alt: "Muhammad Umer Aftab of Aftab & Sons Transport",
   },
 ];
 
@@ -42,8 +40,8 @@ const About = () => (
             on truck transport and B-double freight for business customers.
           </p>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-[#A1A1AA]">
-            From local deliveries to interstate freight, our focus is practical:
-            clear communication, careful handling and dependable transport.
+            From local deliveries to interstate freight, each enquiry is assessed
+            around its freight requirements.
           </p>
           <div className="mt-10 flex flex-wrap gap-2.5 sm:gap-3 border-t border-[#C0C0C0]/15 pt-8">
             {["Truck Transport", "B-Double Freight", "Local Deliveries", "Interstate Freight"].map((word) => (
@@ -70,6 +68,9 @@ const About = () => (
                     alt={owner.alt}
                     loading="lazy"
                     decoding="async"
+                    width={i === 0 ? 1145 : 1122}
+                    height={i === 0 ? 1374 : 1402}
+                    sizes="(min-width: 1024px) 25vw, 50vw"
                     className="aspect-[4/5] w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
@@ -77,15 +78,6 @@ const About = () => (
                   <span className="block text-xs sm:text-sm font-bold text-white transition-colors group-hover:text-[#D4AF37]">
                     {owner.name}
                   </span>
-                  {owner.role ? (
-                    <span className="mt-1 block text-[10px] sm:text-xs font-bold tracking-[0.2em] sm:tracking-[0.3em] text-[#D4AF37] uppercase">
-                      {owner.role}
-                    </span>
-                  ) : (
-                    <span className="mt-1 block text-[10px] sm:text-xs font-bold tracking-[0.2em] sm:tracking-[0.3em] text-[#A1A1AA]/60 uppercase">
-                      Management
-                    </span>
-                  )}
                 </figcaption>
               </figure>
             </Reveal>

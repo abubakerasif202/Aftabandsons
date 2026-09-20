@@ -39,6 +39,10 @@ const Services = () => (
                   src={service.image}
                   alt={`Aftab & Sons Transport — ${service.title}`}
                   loading="lazy"
+                  decoding="async"
+                  width="1672"
+                  height="941"
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent opacity-90" />

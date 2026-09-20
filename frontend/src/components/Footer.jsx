@@ -15,9 +15,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           <div>
             <img
-              src="/assets/logo-horizontal.png"
+              src="/assets/logo-horizontal.webp"
               alt="Aftab & Sons Transport — Australia Keeps Moving"
-              className="h-16 w-auto"
+              width="2172"
+              height="724"
+              loading="lazy"
+              decoding="async"
+              className="h-auto w-[205px]"
             />
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-[#A1A1AA]">
               {SITE.line1}
@@ -57,6 +61,7 @@ const Footer = () => {
                 type="button"
                 onClick={scrollToTop}
                 aria-label="Back to top of page"
+                data-testid="footer-back-to-top"
                 className="group flex items-center gap-2 border border-[#C0C0C0]/20 px-3 py-1.5 text-xs font-bold tracking-wider text-[#C0C0C0] uppercase transition-all duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37]"
               >
                 Top
@@ -117,6 +122,8 @@ const Footer = () => {
                 alt="AB Digital Solutions"
                 width="672"
                 height="309"
+                loading="lazy"
+                decoding="async"
                 className="h-auto w-full"
               />
             </a>

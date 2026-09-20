@@ -12,14 +12,13 @@ export const SITE = {
   phoneHref: "tel:+61448747518",
   whatsappHref: "https://wa.me/61448747518",
   email: "admin@aftabandsons.com.au",
-  web3formsKey: process.env.REACT_APP_WEB3FORMS_KEY || "b0b1f017-828a-4355-83ae-4b852e0cc740",
 };
 
 export const IMAGES = {
   hero: "/assets/fleet-convoy.jpg",
   signature: "/assets/fleet-outback.jpg",
-  owner1: "/assets/owner-1.png",
-  owner2: "/assets/owner-2.png",
+  owner1: "/assets/owner-1.webp",
+  owner2: "/assets/owner-2.webp",
 };
 
 export const SERVICES = [

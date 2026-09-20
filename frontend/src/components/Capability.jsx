@@ -158,7 +158,7 @@ const Capability = () => {
 
               <div className="mt-6 flex items-center justify-between border-t border-[#C0C0C0]/10 pt-6 text-xs text-[#A1A1AA]">
                 <span>Commercial Freight Transit</span>
-                <span className="text-[#D4AF37] font-semibold tracking-wider">DIRECT LINEHAUL</span>
+                <span className="font-semibold tracking-wider text-[#D4AF37]">FREIGHT MOVEMENT</span>
               </div>
             </div>
           </Reveal>

@@ -25,9 +25,13 @@ const Logo = () => (
     className="transition-transform duration-200 hover:scale-[1.02]"
   >
     <img
-      src="/assets/logo-horizontal.png"
+      src="/assets/logo-horizontal.webp"
       alt="Aftab & Sons Transport — Australia Keeps Moving"
-      className="h-12 w-auto max-w-[170px] sm:h-14 sm:max-w-none md:h-16"
+      width="2172"
+      height="724"
+      fetchPriority="high"
+      decoding="async"
+      className="h-auto w-[172px] sm:w-[205px] md:w-[232px]"
     />
   </a>
 );

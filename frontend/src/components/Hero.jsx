@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Users, MapPin } from "lucide-react";
+import { ArrowRight, Truck, Users, MapPin } from "lucide-react";
 import { IMAGES, SITE } from "../constants/site";
 
 const Hero = () => {
@@ -20,6 +20,8 @@ const Hero = () => {
         <img
           src={IMAGES.hero}
           alt="Aftab & Sons Transport B-double convoy on an Australian highway at sunset"
+          width="1672"
+          height="941"
           className="h-full w-full object-cover"
           fetchPriority="high"
           decoding="async"
@@ -85,7 +87,7 @@ const Hero = () => {
           className="mt-14 flex flex-wrap gap-3 sm:gap-4 border-t border-[#C0C0C0]/15 pt-8"
         >
           {[
-            { icon: ShieldCheck, label: "Reliable & Safe" },
+            { icon: Truck, label: "Commercial Freight" },
             { icon: MapPin, label: "Local & Interstate" },
             { icon: Users, label: "Family Driven" },
           ].map(({ icon: Icon, label }) => (
