@@ -116,12 +116,12 @@
   ],
   "build_manifest": {
     "conversion_wiring": {
-      "quote_form": {
-        "action": "POST /api/enquiries",
-        "fields": ["Name", "Email", "Phone", "Freight Details", "Message"]
+      "direct_contact": {
+        "action": "Direct phone, WhatsApp or email contact links",
+        "details": "Use the verified contact details from frontend/src/constants/site.js"
       },
-      "whatsapp_button": "href='wa.me/<placeholder>'",
-      "phone_button": "href='tel:<placeholder>'"
+      "whatsapp_button": "href=SITE.whatsappHref",
+      "phone_button": "href=SITE.phoneHref"
     },
     "content_slots": [
       {
@@ -198,7 +198,7 @@
       "DO NOT invent safety accreditations."
     ]
   },
-  "instructions_to_main_agent": "Use Bebas Neue for all H1/H2 tags and CTAs, with heavy tracking. Stick to a strict dark mode palette. Do NOT round container corners (use rounded-none or rounded-sm at most). Ensure all text is perfectly legible over images using bg-black/60 or similar overlays. Build the About section carefully featuring the two local owner photos provided. Hook up the form to POST /api/enquiries. DO NOT invent any company statistics or testimonials.",
+  "instructions_to_main_agent": "Use Bebas Neue for all H1/H2 tags and CTAs, with heavy tracking. Stick to a strict dark mode palette. Do NOT round container corners (use rounded-none or rounded-sm at most). Ensure all text is perfectly legible over images using bg-black/60 or similar overlays. Build the About section carefully featuring the two local owner photos provided. Keep the Contact section as a direct phone, WhatsApp and email contact panel using verified site constants. DO NOT invent any company statistics or testimonials.",
   "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
     "Do not center align the app container. No '.App { text-align: center; }'",
     "Add 'data-testid' to all interactive elements.",

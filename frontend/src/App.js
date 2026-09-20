@@ -1,5 +1,4 @@
 import "@/App.css";
-import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
@@ -33,7 +32,6 @@ function App() {
         Skip to main content
       </a>
       <LandingPage />
-      <Toaster theme="dark" position="top-center" richColors closeButton />
     </div>
   );
 }

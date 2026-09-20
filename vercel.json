@@ -3,10 +3,5 @@
   "framework": null,
   "installCommand": "cd frontend && corepack enable && yarn install --non-interactive",
   "buildCommand": "cd frontend && yarn build",
-  "outputDirectory": "frontend/build",
-  "functions": {
-    "api/*.py": {
-      "maxDuration": 30
-    }
-  }
+  "outputDirectory": "frontend/build"
 }

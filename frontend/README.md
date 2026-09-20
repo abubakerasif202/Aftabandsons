@@ -1,22 +1,26 @@
 # Aftab & Sons Transport Frontend
 
-React landing page for the Aftab & Sons Transport website.
+Static React landing page for the Aftab & Sons Transport website. The
+production deployment serves the compiled frontend only; visitors contact the
+business through the verified phone, WhatsApp and email links in the page.
 
 ## Commands
 
-```bash
+```powershell
+Set-Location -LiteralPath 'C:\Users\abuba\Aftabandsons\frontend'
 yarn install
 yarn start
 yarn build
-yarn test
+yarn test --watchAll=false --runInBand
 ```
 
-## Environment
+## Deployment
 
-`REACT_APP_BACKEND_URL` is optional.
+The Vercel project builds `frontend/` and serves `frontend/build`. No API,
+database, backend environment variables or server-side runtime are required.
 
-- If supplied, enquiries are sent to `<REACT_APP_BACKEND_URL>/api/enquiries`.
-- If omitted, enquiries are sent to the same origin at `/api/enquiries`.
+The contact details are centralized in `src/constants/site.js` and rendered
+as `tel:`, WhatsApp and `mailto:` links.
 
 ## Brand
 

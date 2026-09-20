@@ -1,20 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import axios from "axios";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
-import { SERVICES, SERVICE_OPTIONS, SITE } from "./constants/site";
-
-jest.mock("axios", () => ({
-  __esModule: true,
-  default: { post: jest.fn() },
-}));
-
-jest.mock("sonner", () => ({
-  __esModule: true,
-  toast: { success: jest.fn(), error: jest.fn() },
-}));
+import { SERVICES, SITE } from "./constants/site";
 
 jest.mock("framer-motion", () => {
   const React = require("react");
@@ -44,24 +33,6 @@ jest.mock("framer-motion", () => {
     useReducedMotion: () => true,
   };
 });
-
-const fillValidForm = () => {
-  fireEvent.change(screen.getByTestId("quote-name-input"), {
-    target: { value: "Jordan Smith" },
-  });
-  fireEvent.change(screen.getByTestId("quote-email-input"), {
-    target: { value: "jordan@example.com" },
-  });
-  fireEvent.change(screen.getByTestId("quote-phone-input"), {
-    target: { value: "+61 400 000 000" },
-  });
-  fireEvent.change(screen.getByTestId("quote-service-select"), {
-    target: { value: SERVICE_OPTIONS[0] },
-  });
-  fireEvent.change(screen.getByTestId("quote-message-input"), {
-    target: { value: "Two pallets from Adelaide to Melbourne next week." },
-  });
-};
 
 describe("header and navigation", () => {
   test("renders the sharp logo, primary navigation and quote CTA", () => {
@@ -116,113 +87,18 @@ describe("hero and services", () => {
   });
 });
 
-describe("quote form validation and submission", () => {
-  beforeEach(() => {
-    axios.post.mockReset();
-  });
-
-  test("associates labels with every customer-facing form control", () => {
+describe("static contact options", () => {
+  test("replaces the quote form with direct contact options", () => {
     render(<Contact />);
 
-    ["Name", "Email", "Phone", "Service", "Freight Details"].forEach((label) => {
-      expect(screen.getByLabelText(new RegExp(label))).toBeInTheDocument();
-    });
+    expect(screen.getByTestId("contact-direct-panel")).toBeInTheDocument();
+    expect(screen.queryByTestId("quote-form")).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
-  test("rejects missing required fields, invalid email, invalid service and short details", () => {
-    render(<Contact />);
-    fireEvent.click(screen.getByTestId("quote-submit-button"));
-
-    expect(screen.getByTestId("quote-name-error")).toHaveTextContent("at least 2");
-    expect(screen.getByTestId("quote-email-error")).toHaveTextContent("valid email");
-    expect(screen.getByTestId("quote-service-error")).toHaveTextContent("choose a service");
-    expect(screen.getByTestId("quote-message-error")).toHaveTextContent("10+");
-    expect(axios.post).not.toHaveBeenCalled();
-  });
-
-  test("rejects an invalid email and short freight details after other fields are filled", () => {
-    render(<Contact />);
-    fillValidForm();
-    fireEvent.change(screen.getByTestId("quote-email-input"), {
-      target: { value: "not-an-email" },
-    });
-    fireEvent.change(screen.getByTestId("quote-message-input"), {
-      target: { value: "Too short" },
-    });
-    fireEvent.click(screen.getByTestId("quote-submit-button"));
-
-    expect(screen.getByTestId("quote-email-error")).toHaveTextContent("valid email");
-    expect(screen.getByTestId("quote-message-error")).toHaveTextContent("10+");
-    expect(axios.post).not.toHaveBeenCalled();
-  });
-
-  test("creates the verified request payload and prevents duplicate submissions", async () => {
-    let resolveRequest;
-    axios.post.mockReturnValue(new Promise((resolve) => { resolveRequest = resolve; }));
-    render(<Contact />);
-    fillValidForm();
-
-    const form = screen.getByTestId("quote-form");
-    fireEvent.submit(form);
-    fireEvent.submit(form);
-
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
-      "/api/enquiries",
-      {
-        name: "Jordan Smith",
-        email: "jordan@example.com",
-        phone: "+61 400 000 000",
-        service: "Truck Transport",
-        message: "Two pallets from Adelaide to Melbourne next week.",
-        website: "",
-      },
-      expect.objectContaining({ timeout: 15000 }),
-    );
-    expect(screen.getByTestId("quote-submit-button")).toBeDisabled();
-
-    resolveRequest({ status: 201, data: { status: "received", id: "test-id" } });
-    await waitFor(() => expect(screen.getByTestId("quote-success-message")).toBeInTheDocument());
-  });
-
-  test("shows a success state for the accepted API response", async () => {
-    axios.post.mockResolvedValue({ status: 201, data: { status: "received" } });
-    render(<Contact />);
-    fillValidForm();
-    fireEvent.click(screen.getByTestId("quote-submit-button"));
-
-    await waitFor(() => expect(screen.getByTestId("quote-success-message")).toBeInTheDocument());
-    expect(screen.getByTestId("quote-name-input")).toHaveValue("");
-  });
-
-  test("shows the service failure state without sending a second request", async () => {
-    axios.post.mockRejectedValue({ response: { status: 503 } });
-    render(<Contact />);
-    fillValidForm();
-    fireEvent.click(screen.getByTestId("quote-submit-button"));
-
-    await waitFor(() => expect(screen.getByTestId("quote-error-message")).toHaveTextContent("temporarily unavailable"));
-    expect(axios.post).toHaveBeenCalledTimes(1);
-  });
-
-  test("shows distinct timeout and network failure guidance", async () => {
-    axios.post.mockRejectedValueOnce({ code: "ECONNABORTED" });
-    const { unmount } = render(<Contact />);
-    fillValidForm();
-    fireEvent.click(screen.getByTestId("quote-submit-button"));
-    await waitFor(() => expect(screen.getByTestId("quote-error-message")).toHaveTextContent("timed out"));
-
-    unmount();
-    axios.post.mockRejectedValueOnce(new Error("network down"));
-    render(<Contact />);
-    fillValidForm();
-    fireEvent.click(screen.getByTestId("quote-submit-button"));
-    await waitFor(() => expect(screen.getByTestId("quote-error-message")).toHaveTextContent("Please try again"));
-  });
-});
-
-describe("verified site content", () => {
-  test("keeps the verified phone, email and accessible navigation semantics", () => {
+  test("keeps the verified phone, email and accessible direct-contact links", () => {
     render(<Contact />);
 
     expect(screen.getByTestId("contact-call-button")).toHaveAttribute("href", SITE.phoneHref);

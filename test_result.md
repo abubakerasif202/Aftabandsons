@@ -232,20 +232,17 @@ frontend:
         comment: "Added active touch feedback and button shine on mobile quote button with safe area inset padding."
 
 backend:
-  - task: "Enquiry Validation & Email Guards"
+  - task: "Backend removed for static deployment"
     implemented: true
     working: "NA"
-    file: "backend/server.py"
+    file: "N/A"
     stuck_count: 0
     priority: "low"
     needs_retesting: false
     status_history:
-      - working: true
-        agent: "main"
-        comment: "Ran pytest with pytest-xdist; all 10 unit and security guard tests passed."
       - working: "NA"
         agent: "main"
-        comment: "Backend option removed from frontend per user request; frontend now submits directly to Web3Forms."
+        comment: "Backend removed from the repository; contact flow is now direct phone, WhatsApp and email links."
 
 metadata:
   created_by: "main_agent"
@@ -256,7 +253,7 @@ metadata:
 test_plan:
   current_focus:
     - "Post-Deployment Production Audit"
-    - "Live Web3Forms Verification"
+    - "Live static contact verification"
     - "Phone Validation Error Fix"
     - "Manifest Icon Warning Fix"
   stuck_tasks: []
@@ -265,5 +262,5 @@ test_plan:
 
 agent_communication:
   - agent: "main"
-    message: "Completed comprehensive post-deployment production audit on https://aftabandsons.vercel.app. Verified Web3Forms live submission, responsive layout across 320px-1920px viewports, contact actions, accessibility, SEO, and performance. Resolved missing phone validation error display in Contact.jsx and manifest icon size warning in manifest.json."
+    message: "Historical UI audit retained for testing protocol context. Current release removes server submission and verifies the static contact flow."
 
