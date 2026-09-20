@@ -1,5 +1,4 @@
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -9,11 +8,12 @@ import About from "@/components/About";
 import Signature from "@/components/Signature";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import MobileActions from "@/components/MobileActions";
 
 const LandingPage = () => (
-  <div className="min-h-screen bg-[#0A0A0A] text-white antialiased">
+  <div className="min-h-screen bg-[#0A0A0A] pb-14 text-white antialiased lg:pb-0">
     <Header />
-    <main>
+    <main id="main-content" tabIndex="-1">
       <Hero />
       <Services />
       <Capability />
@@ -22,18 +22,18 @@ const LandingPage = () => (
       <Contact />
     </main>
     <Footer />
+    <MobileActions />
   </div>
 );
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster theme="dark" position="top-center" richColors />
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
+      <LandingPage />
+      <Toaster theme="dark" position="top-center" richColors closeButton />
     </div>
   );
 }

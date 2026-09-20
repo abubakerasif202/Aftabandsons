@@ -22,6 +22,7 @@ const Hero = () => {
           alt="Aftab & Sons Transport B-double convoy on an Australian highway at sunset"
           className="h-full w-full object-cover"
           fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/70 to-[#0A0A0A]/30" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0A0A0A] to-transparent" />
@@ -52,8 +53,8 @@ const Hero = () => {
           data-testid="hero-subline"
           className="mt-6 max-w-xl text-base leading-relaxed text-[#C0C0C0] sm:text-lg"
         >
-          {SITE.line1} Premium truck transport and B-double freight for
-          Australian businesses — reliable, safe and family driven.
+          {SITE.line1} Truck transport and B-double freight for Australian
+          businesses, from local deliveries to interstate freight.
         </motion.p>
 
         <motion.div {...rise(0.45)} className="mt-10 flex flex-wrap items-center gap-4">
@@ -81,7 +82,7 @@ const Hero = () => {
         >
           {[
             { icon: ShieldCheck, label: "Reliable & Safe" },
-            { icon: MapPin, label: "Nationwide Reach" },
+            { icon: MapPin, label: "Local & Interstate" },
             { icon: Users, label: "Family Driven" },
           ].map(({ icon: Icon, label }) => (
             <li

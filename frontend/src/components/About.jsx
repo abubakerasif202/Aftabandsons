@@ -5,14 +5,14 @@ const OWNERS = [
   {
     image: IMAGES.owner1,
     name: "Muhammad Samar Aftab",
-    role: "Director",
-    alt: "Muhammad Samar Aftab, Director of Aftab & Sons Transport",
+    role: null,
+    alt: "Muhammad Samar Aftab of Aftab & Sons Transport",
   },
   {
     image: IMAGES.owner2,
     name: "Muhammad Umer Aftab",
-    role: "CEO",
-    alt: "Muhammad Umer Aftab, CEO of Aftab & Sons Transport",
+    role: "Director",
+    alt: "Muhammad Umer Aftab, Director of Aftab & Sons Transport",
   },
 ];
 
@@ -38,17 +38,15 @@ const About = () => (
             <span className="text-[#C81010]">Driven by Australia.</span>
           </h2>
           <p className="mt-8 max-w-xl text-base leading-relaxed text-[#C0C0C0]">
-            {SITE.name} is a family-driven Australian transport business. The
-            name on the truck is the family behind the wheel — and that means
-            every load carries our reputation with it.
+            {SITE.name} is a family-driven Australian transport business focused
+            on truck transport and B-double freight for business customers.
           </p>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-[#A1A1AA]">
-            From local deliveries to interstate B-double freight, we keep things
-            simple: straight answers, careful hands, and freight that arrives
-            the way it left. That is what family driven means to us.
+            From local deliveries to interstate freight, our focus is practical:
+            clear communication, careful handling and dependable transport.
           </p>
           <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4 border-t border-[#C0C0C0]/15 pt-8">
-            {["Reliable", "Safe", "Nationwide", "Family Driven"].map((word) => (
+            {["Truck Transport", "B-Double Freight", "Local", "Interstate"].map((word) => (
               <span
                 key={word}
                 className="font-display text-lg tracking-[0.2em] text-[#C0C0C0] uppercase"
@@ -61,7 +59,7 @@ const About = () => (
 
         <div className="grid grid-cols-2 gap-4 sm:gap-6">
           {OWNERS.map((owner, i) => (
-            <Reveal key={i} delay={0.15 + i * 0.15} className={i === 1 ? "sm:mt-12" : ""}>
+            <Reveal key={owner.name} delay={0.15 + i * 0.15} className={i === 1 ? "sm:mt-12" : ""}>
               <figure
                 data-testid={`about-owner-${i + 1}`}
                 className="group border border-[#C0C0C0]/15 bg-[#141414]"
@@ -71,6 +69,7 @@ const About = () => (
                     src={owner.image}
                     alt={owner.alt}
                     loading="lazy"
+                    decoding="async"
                     className="aspect-[4/5] w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
@@ -78,9 +77,11 @@ const About = () => (
                   <span className="block text-sm font-bold text-white">
                     {owner.name}
                   </span>
-                  <span className="mt-1 block text-xs font-bold tracking-[0.3em] text-[#D4AF37] uppercase">
-                    {owner.role}
-                  </span>
+                  {owner.role && (
+                    <span className="mt-1 block text-xs font-bold tracking-[0.3em] text-[#D4AF37] uppercase">
+                      {owner.role}
+                    </span>
+                  )}
                 </figcaption>
               </figure>
             </Reveal>

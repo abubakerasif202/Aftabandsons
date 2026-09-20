@@ -1,6 +1,6 @@
-// Central place for all business content.
-// Items marked PLACEHOLDER were NOT supplied by the owner and must be replaced
-// with real details before going live.
+// Central source of truth for public business content.
+// Do not add statistics, guarantees, accreditations, locations or roles unless
+// they have been supplied or verified by the business owner.
 export const SITE = {
   name: "Aftab & Sons Transport",
   nameShort: "Aftab & Sons",
@@ -8,7 +8,6 @@ export const SITE = {
   line1: "Australian Roads. Australian People. A Brighter Tomorrow.",
   line2: "Built on People. Driven by Australia.",
   signatureLine: "On Every Road, Australia Keeps Moving",
-  // Real business contact details (supplied by owner)
   phoneDisplay: "+61 448 747 518",
   phoneHref: "tel:+61448747518",
   whatsappHref: "https://wa.me/61448747518",
@@ -27,28 +26,28 @@ export const SERVICES = [
     id: "truck-transport",
     title: "Truck Transport",
     description:
-      "Dependable prime-mover transport for commercial freight, handled with care from pickup to delivery.",
+      "Prime-mover transport for commercial freight from pickup through delivery.",
     image: "/assets/fleet-depot.jpg",
   },
   {
     id: "b-double-freight",
     title: "B-Double Freight",
     description:
-      "B-double combinations for high-volume loads — efficient linehaul capability for Australian freight.",
+      "B-double combinations for high-volume freight and Australian linehaul work.",
     image: "/assets/fleet-lineup.jpg",
   },
   {
     id: "local-deliveries",
     title: "Local Deliveries",
     description:
-      "Responsive local delivery runs for businesses that need their freight moved on time, every time.",
+      "Local delivery transport for businesses moving commercial freight.",
     image: "/assets/fleet-local.jpg",
   },
   {
     id: "interstate-freight",
     title: "Interstate Freight",
     description:
-      "Long-haul interstate freight across Australia — your goods moved safely over the long distances.",
+      "Long-haul interstate transport for business freight across Australian roads.",
     image: "/assets/fleet-interstate.jpg",
   },
 ];
