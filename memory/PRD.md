@@ -21,19 +21,18 @@ Build a landing page (with supplied AGENT.md spec): a premium, cinematic, animat
 
 ## Implemented (2026-09-20)
 - Full landing page: sticky header + mobile sheet menu, hero, 4 service cards, capability section with animated route line, parallax signature section, about with owner photos, contact/quote form, footer
-- Enquiry form: client + server validation, loading/success/error states, sonner toasts, MongoDB storage, email notification via Resend proxy (verified `email_sent: true`)
+- Enquiry form: client + server validation, loading/success/error states, sonner toasts, MongoDB storage, email notification via Resend proxy
 - SEO: title, meta description, OG tags; data-testids on all interactive elements
 - Fixed: mobile horizontal overflow (implicit auto grid tracks), fetchPriority prop casing
 - Verified: desktop + mobile screenshots, zero console errors, form E2E submit, API validation 422s
+- Update 2 (2026-09-20): real contact details wired (phone/WhatsApp +61 448 747 518, admin@aftabandsons.com.au); directors named (Muhammad Samar Aftab — Director, Muhammad Umer Aftab — CEO); real logo extracted from brand board (header, footer, favicon); real fleet photos in hero (convoy sunset), Truck Transport (depot), B-Double Freight (lineup)
+- KNOWN ISSUE: email proxy still blocks admin@aftabandsons.com.au as "undeliverable recipient" (422) even though MX (smtp.google.com) is now live — likely negative DNS/deliverability caching on the proxy; send path itself verified working (202 to delivered@resend.dev). Enquiries are always stored in MongoDB `enquiries` collection regardless. Re-test periodically; if it persists after cache expiry, use a Gmail as interim OWNER_EMAIL
 
-## PLACEHOLDERS — owner must supply real values
-- `frontend/src/constants/site.js`: phoneDisplay/phoneHref (+61 400 000 000), whatsappHref, email (enquiries@aftabandsons.com.au)
-- `backend/.env` OWNER_EMAIL: currently `delivered@resend.dev` (Resend test inbox) — replace with the real business email so enquiries reach the owner
-- Owner names/roles for About section (photos show "Director" only)
+## Contact details (real, supplied by owner)
+- Phone / WhatsApp: +61 448 747 518
+- Email / enquiry inbox: admin@aftabandsons.com.au
 
 ## Backlog
-- P0: Replace placeholder phone/WhatsApp/email + OWNER_EMAIL with real details
-- P1: Add owner names/roles to About
-- P1: Real fleet/service photos replacing stock imagery
-- P2: Logo image file (currently typographic lockup), favicon
+- P0: Confirm enquiry emails arrive at admin@aftabandsons.com.au (proxy re-check)
+- P1: Remaining stock images (Local Deliveries warehouse, Interstate Scania, signature aerial) could be replaced with more fleet photos
 - P2: Sitemap/robots, structured data (once real business facts exist)

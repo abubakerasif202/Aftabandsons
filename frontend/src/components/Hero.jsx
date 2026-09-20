@@ -19,7 +19,7 @@ const Hero = () => {
       <div className="absolute inset-0">
         <img
           src={IMAGES.hero}
-          alt="Semi-truck travelling an Australian highway under a dramatic sky"
+          alt="Aftab & Sons Transport B-double convoy on an Australian highway at sunset"
           className="h-full w-full object-cover"
           fetchPriority="high"
         />

@@ -33,7 +33,7 @@ const Services = () => (
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
                   src={service.image}
-                  alt={service.title}
+                  alt={`Aftab & Sons Transport — ${service.title}`}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />

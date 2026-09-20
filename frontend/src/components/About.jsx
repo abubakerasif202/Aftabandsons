@@ -2,8 +2,18 @@ import Reveal from "./motion/Reveal";
 import { IMAGES, SITE } from "../constants/site";
 
 const OWNERS = [
-  { image: IMAGES.owner1, alt: "Director of Aftab & Sons Transport", role: "Director" },
-  { image: IMAGES.owner2, alt: "Director of Aftab & Sons Transport", role: "Director" },
+  {
+    image: IMAGES.owner1,
+    name: "Muhammad Samar Aftab",
+    role: "Director",
+    alt: "Muhammad Samar Aftab, Director of Aftab & Sons Transport",
+  },
+  {
+    image: IMAGES.owner2,
+    name: "Muhammad Umer Aftab",
+    role: "CEO",
+    alt: "Muhammad Umer Aftab, CEO of Aftab & Sons Transport",
+  },
 ];
 
 const About = () => (
@@ -65,7 +75,10 @@ const About = () => (
                   />
                 </div>
                 <figcaption className="border-t border-[#C0C0C0]/15 px-5 py-4">
-                  <span className="text-xs font-bold tracking-[0.3em] text-[#D4AF37] uppercase">
+                  <span className="block text-sm font-bold text-white">
+                    {owner.name}
+                  </span>
+                  <span className="mt-1 block text-xs font-bold tracking-[0.3em] text-[#D4AF37] uppercase">
                     {owner.role}
                   </span>
                 </figcaption>

@@ -8,15 +8,15 @@ export const SITE = {
   line1: "Australian Roads. Australian People. A Brighter Tomorrow.",
   line2: "Built on People. Driven by Australia.",
   signatureLine: "On Every Road, Australia Keeps Moving",
-  // PLACEHOLDER contact details (owner to supply real ones)
-  phoneDisplay: "+61 400 000 000",
-  phoneHref: "tel:+61400000000",
-  whatsappHref: "https://wa.me/61400000000",
-  email: "enquiries@aftabandsons.com.au",
+  // Real business contact details (supplied by owner)
+  phoneDisplay: "+61 448 747 518",
+  phoneHref: "tel:+61448747518",
+  whatsappHref: "https://wa.me/61448747518",
+  email: "admin@aftabandsons.com.au",
 };
 
 export const IMAGES = {
-  hero: "https://images.pexels.com/photos/12261472/pexels-photo-12261472.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  hero: "/assets/fleet-convoy.jpg",
   signature:
     "https://images.pexels.com/photos/19751848/pexels-photo-19751848.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   owner1: "/assets/owner-1.png",
@@ -29,16 +29,14 @@ export const SERVICES = [
     title: "Truck Transport",
     description:
       "Dependable prime-mover transport for commercial freight, handled with care from pickup to delivery.",
-    image:
-      "https://images.unsplash.com/photo-1591768793355-74d04bb6608f?auto=compress&cs=tinysrgb&w=940",
+    image: "/assets/fleet-depot.jpg",
   },
   {
     id: "b-double-freight",
     title: "B-Double Freight",
     description:
       "B-double combinations for high-volume loads — efficient linehaul capability for Australian freight.",
-    image:
-      "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=compress&cs=tinysrgb&w=940",
+    image: "/assets/fleet-lineup.jpg",
   },
   {
     id: "local-deliveries",

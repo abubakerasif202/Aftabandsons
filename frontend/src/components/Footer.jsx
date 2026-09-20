@@ -9,18 +9,11 @@ const Footer = () => (
     <div className="mx-auto max-w-7xl px-5 sm:px-8">
       <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
         <div>
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-3xl tracking-[0.08em] text-white">
-              AFTAB <span className="text-[#C81010]">&amp;</span> SONS
-            </span>
-            <span className="mt-2 flex items-center gap-2">
-              <span className="h-px w-5 bg-[#D4AF37]" />
-              <span className="text-[10px] font-semibold tracking-[0.5em] text-[#C0C0C0]">
-                TRANSPORT
-              </span>
-              <span className="h-px w-5 bg-[#D4AF37]" />
-            </span>
-          </div>
+          <img
+            src="/assets/logo-horizontal.png"
+            alt="Aftab & Sons Transport — Australia Keeps Moving"
+            className="h-16 w-auto"
+          />
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-[#A1A1AA]">
             {SITE.line1}
           </p>

@@ -18,17 +18,12 @@ const NAV = [
 ];
 
 const Logo = () => (
-  <a href="#home" data-testid="nav-logo" className="flex flex-col leading-none">
-    <span className="font-display text-2xl tracking-[0.08em] text-white">
-      AFTAB <span className="text-[#C81010]">&amp;</span> SONS
-    </span>
-    <span className="mt-1 flex items-center gap-2">
-      <span className="h-px w-4 bg-[#D4AF37]" />
-      <span className="text-[10px] font-semibold tracking-[0.5em] text-[#C0C0C0]">
-        TRANSPORT
-      </span>
-      <span className="h-px w-4 bg-[#D4AF37]" />
-    </span>
+  <a href="#home" data-testid="nav-logo" aria-label="Aftab & Sons Transport — home">
+    <img
+      src="/assets/logo-horizontal.png"
+      alt="Aftab & Sons Transport — Australia Keeps Moving"
+      className="h-14 w-auto md:h-16"
+    />
   </a>
 );
 
