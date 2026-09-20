@@ -26,13 +26,12 @@ Build a landing page (with supplied AGENT.md spec): a premium, cinematic, animat
 - Fixed: mobile horizontal overflow (implicit auto grid tracks), fetchPriority prop casing
 - Verified: desktop + mobile screenshots, zero console errors, form E2E submit, API validation 422s
 - Update 2 (2026-09-20): real contact details wired (phone/WhatsApp +61 448 747 518, admin@aftabandsons.com.au); directors named (Muhammad Samar Aftab — Director, Muhammad Umer Aftab — CEO); real logo extracted from brand board (header, footer, favicon); real fleet photos in hero (convoy sunset), Truck Transport (depot), B-Double Freight (lineup)
-- KNOWN ISSUE: email proxy blocks admin@aftabandsons.com.au as "undeliverable recipient" (422). ROOT CAUSE FOUND: domain registered within last 5 days (WHOIS status `addPeriod`, MX smtp.google.com added 2026-09-20 08:25 UTC) — anti-spam screening blocks mail to brand-new domains. Mailbox itself verified working (SMTP RCPT probe to Google returned 250 OK; MX visible on 1.1.1.1/8.8.8.8/9.9.9.9). Block should clear as domain ages; escalated to support@emergent.sh for possible whitelisting. OWNER DECISION (2026-09-20): skip interim inbox/alternative email — keep admin@ configured, rely on phone/WhatsApp + stored enquiries until it clears. Enquiries are always stored in MongoDB `enquiries` collection regardless. Re-test periodically with: POST /api/enquiries then check email_sent field
+- Update 3 (2026-09-20): final fleet swap — Local Deliveries now uses branded depot shot (fleet-local.jpg), Interstate Freight uses highway convoy close-up (fleet-interstate.jpg). ALL service cards + hero now use the owner's real fleet imagery; only the signature parallax keeps the generic outback-road aerial (no trucks, intentional) email proxy blocks admin@aftabandsons.com.au as "undeliverable recipient" (422). ROOT CAUSE FOUND: domain registered within last 5 days (WHOIS status `addPeriod`, MX smtp.google.com added 2026-09-20 08:25 UTC) — anti-spam screening blocks mail to brand-new domains. Mailbox itself verified working (SMTP RCPT probe to Google returned 250 OK; MX visible on 1.1.1.1/8.8.8.8/9.9.9.9). Block should clear as domain ages; escalated to support@emergent.sh for possible whitelisting. OWNER DECISION (2026-09-20): skip interim inbox/alternative email — keep admin@ configured, rely on phone/WhatsApp + stored enquiries until it clears. Enquiries are always stored in MongoDB `enquiries` collection regardless. Re-test periodically with: POST /api/enquiries then check email_sent field
 
 ## Contact details (real, supplied by owner)
 - Phone / WhatsApp: +61 448 747 518
 - Email / enquiry inbox: admin@aftabandsons.com.au
 
 ## Backlog
-- P0: Confirm enquiry emails arrive at admin@aftabandsons.com.au (proxy re-check)
-- P1: Remaining stock images (Local Deliveries warehouse, Interstate Scania, signature aerial) could be replaced with more fleet photos
+- P0: Confirm enquiry emails arrive at admin@aftabandsons.com.au (blocked only because the domain is days old — re-test in a few days)
 - P2: Sitemap/robots, structured data (once real business facts exist)

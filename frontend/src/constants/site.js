@@ -43,16 +43,14 @@ export const SERVICES = [
     title: "Local Deliveries",
     description:
       "Responsive local delivery runs for businesses that need their freight moved on time, every time.",
-    image:
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=compress&cs=tinysrgb&w=940",
+    image: "/assets/fleet-local.jpg",
   },
   {
     id: "interstate-freight",
     title: "Interstate Freight",
     description:
       "Long-haul interstate freight across Australia — your goods moved safely over the long distances.",
-    image:
-      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=compress&cs=tinysrgb&w=940",
+    image: "/assets/fleet-interstate.jpg",
   },
 ];
 
