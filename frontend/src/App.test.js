@@ -68,6 +68,7 @@ describe("hero and services", () => {
   test("renders the main heading and both hero conversion anchors", () => {
     render(<Hero />);
 
+    expect(screen.getByTestId("hero-opening-truck")).toBeInTheDocument();
     expect(screen.getByTestId("hero-headline")).toHaveTextContent("Australia");
     expect(screen.getByTestId("hero-headline")).toHaveTextContent("Moving");
     expect(screen.getByTestId("hero-quote-button")).toHaveAttribute("href", "#contact");

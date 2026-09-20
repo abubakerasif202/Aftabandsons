@@ -30,6 +30,36 @@ const Hero = () => {
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#0A0A0A] to-transparent" />
       </div>
 
+      <motion.div
+        data-testid="hero-opening-truck"
+        aria-hidden="true"
+        initial={reduce ? { opacity: 0 } : { x: "-24vw", opacity: 0, scale: 0.9 }}
+        animate={
+          reduce
+            ? { opacity: 0 }
+            : {
+                x: "118vw",
+                opacity: [0, 0.9, 0.9, 0],
+                scale: [0.9, 1, 1, 0.94],
+              }
+        }
+        transition={
+          reduce
+            ? { duration: 0 }
+            : {
+                duration: 3.2,
+                delay: 0.15,
+                ease: "easeInOut",
+                times: [0, 0.12, 0.82, 1],
+              }
+        }
+        className="pointer-events-none absolute bottom-[17%] left-0 z-[1] flex items-center gap-3 text-[#D4AF37]"
+      >
+        <span className="h-px w-20 bg-gradient-to-r from-transparent via-[#D4AF37]/70 to-[#D4AF37] sm:w-32" />
+        <Truck className="h-16 w-16 drop-shadow-[0_0_14px_rgba(212,175,55,0.45)] sm:h-24 sm:w-24" />
+        <span className="h-px w-14 bg-gradient-to-r from-[#D4AF37] to-transparent sm:w-24" />
+      </motion.div>
+
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pt-28 pb-20 sm:px-8">
         <motion.div
           {...rise(0.05)}
