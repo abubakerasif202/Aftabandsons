@@ -1,0 +1,210 @@
+{
+  "theme": "dark",
+  "app_type": "landing_page",
+  "typography": {
+    "fonts": [
+      {
+        "family": "Bebas Neue",
+        "category": "primary",
+        "usage": "H1, H2, large display numbers, prominent CTAs",
+        "characteristics": "Heavy, industrial, bold, uppercase by default. Represents the 'Trusted, Modern, Bold' transport aesthetic."
+      },
+      {
+        "family": "Manrope",
+        "category": "secondary",
+        "usage": "Body text, small labels, form inputs, navigation links",
+        "characteristics": "Clean, geometric sans-serif. Highly readable for data and dense text."
+      }
+    ],
+    "scale": {
+      "h1": "text-5xl sm:text-6xl md:text-7xl uppercase tracking-wider",
+      "h2": "text-4xl sm:text-5xl uppercase tracking-wide",
+      "h3": "text-2xl sm:text-3xl uppercase tracking-wide",
+      "h4": "text-lg sm:text-xl font-bold",
+      "body": "text-base leading-relaxed text-gray-300",
+      "small": "text-sm tracking-wide text-gray-400"
+    }
+  },
+  "colors": {
+    "palette": {
+      "background": "#0A0A0A",
+      "surface": "#141414",
+      "primary": "#C81010",
+      "primary_hover": "#A00D0D",
+      "gold_accent": "#D4AF37",
+      "silver_chrome": "#C0C0C0",
+      "text_main": "#FFFFFF",
+      "text_muted": "#A1A1AA",
+      "border": "rgba(192, 192, 192, 0.15)"
+    },
+    "strategy": "Dark cinematic mode. The UI should feel like a premium command center or high-end industrial brochure. Almost entirely deep black/charcoal backgrounds. Use the Red (#C81010) strictly for primary CTA buttons and active states. Use Gold (#D4AF37) for premium accents like subtle icons or section dividers. Use Silver (#C0C0C0) for faint 1px structural borders."
+  },
+  "visual_enhancers": {
+    "shadows": "Minimal. Rely on 1px borders (border-[#C0C0C0]/15) to separate dark elements rather than drop shadows.",
+    "border_radius": "Sharp or minimal. Use rounded-none or rounded-sm (2px). Do not use heavily rounded corners; it dilutes the industrial feel.",
+    "textures": "Cinematic dark overlays on imagery (bg-black/40 to bg-black/60) to ensure high text contrast. Grain overlay on pure black backgrounds if possible to reduce digital flatness.",
+    "interactions": "Hover states on cards should subtly lift (-translate-y-1) and increase border brightness. Buttons should have a strong hover state (color shift or subtle glow)."
+  },
+  "layouts": {
+    "structure": "Grid-based, generous spacing (p-12, p-24). Avoid cramped sections. Let images and large typography breathe.",
+    "hero": "Full-bleed background image with heavy dark gradient overlay. Large Bebas Neue headline, clean Manrope sub-headline, solid Red CTA.",
+    "services": "Bento-style or strict 4-column grid for the services. Sharp edges, 1px silver-tinted borders.",
+    "about": "Asymmetric layout. 2 columns: Text/Story on one side, a tight grid of the 2 owner photos on the other.",
+    "contact": "2-column layout: Form on the left, Contact details (WhatsApp, Phone) on the right."
+  },
+  "motion": {
+    "philosophy": "Purposeful, heavy, and premium. No bouncy or overly fast animations.",
+    "libraries": "framer-motion for scroll reveals, pure CSS for hover states.",
+    "effects": [
+      "Staggered fade-up (y: 20, opacity: 0) for lists and service cards.",
+      "Parallax effect on the signature drone shot background.",
+      "Smooth accordion for any expandable details.",
+      "Respect prefers-reduced-motion."
+    ]
+  },
+  "components": {
+    "buttons": "Sharp corners (rounded-none). Primary: bg-[#C81010] text-white hover:bg-[#A00D0D]. Secondary: transparent with border border-[#C0C0C0]/30 text-white hover:border-white.",
+    "inputs": "Shadcn based. Dark background (bg-[#141414]), sharp corners, focus:ring-1 focus:ring-[#C81010].",
+    "cards": "Dark surfaces (bg-[#141414] or transparent), 1px border-[#C0C0C0]/15, sharp corners. Images inside cards should have a subtle zoom on hover."
+  },
+  "image_urls": [
+    {
+      "url": "https://images.pexels.com/photos/12261472/pexels-photo-12261472.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "category": "Hero Background",
+      "description": "Cinematic white semi-truck travelling on highway under dramatic dark sky. Apply heavy black gradient overlay."
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1591768793355-74d04bb6608f",
+      "category": "Service Card - Truck Transport",
+      "description": "White and blue truck on road."
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1592805144716-feeccccef5ac",
+      "category": "Service Card - B-Double Freight",
+      "description": "Semi truck driving on a highway under warm sky."
+    },
+    {
+      "url": "https://images.pexels.com/photos/35818851/pexels-photo-35818851.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "category": "Service Card - Local Deliveries",
+      "description": "Delivery truck parked on city street."
+    },
+    {
+      "url": "https://images.pexels.com/photos/34902065/pexels-photo-34902065.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "category": "Service Card - Interstate Freight",
+      "description": "Semi-truck travelling on scenic highway."
+    },
+    {
+      "url": "https://images.pexels.com/photos/19751848/pexels-photo-19751848.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "category": "Signature Cinematic Moment",
+      "description": "Drone shot of sandy road cutting through desert landscape. Use for parallax break section."
+    },
+    {
+      "url": "/assets/brand-board.jpg",
+      "category": "Brand Assets",
+      "description": "Local reference for logo and exact brand lockup."
+    },
+    {
+      "url": "/assets/owner-1.png",
+      "category": "About Section - Owner 1",
+      "description": "Local asset: younger man in black suit."
+    },
+    {
+      "url": "/assets/owner-2.png",
+      "category": "About Section - Owner 2",
+      "description": "Local asset: bearded man in navy suit."
+    }
+  ],
+  "build_manifest": {
+    "conversion_wiring": {
+      "quote_form": {
+        "action": "POST /api/enquiries",
+        "fields": ["Name", "Email", "Phone", "Freight Details", "Message"]
+      },
+      "whatsapp_button": "href='wa.me/<placeholder>'",
+      "phone_button": "href='tel:<placeholder>'"
+    },
+    "content_slots": [
+      {
+        "slot": "brand_name",
+        "text": "Aftab & Sons Transport",
+        "source": "brief"
+      },
+      {
+        "slot": "tagline_main",
+        "text": "AUSTRALIA KEEPS MOVING",
+        "source": "brief"
+      },
+      {
+        "slot": "tagline_secondary_1",
+        "text": "Australian Roads. Australian People. A Brighter Tomorrow.",
+        "source": "brief"
+      },
+      {
+        "slot": "tagline_secondary_2",
+        "text": "Built on People. Driven by Australia.",
+        "source": "brief"
+      },
+      {
+        "slot": "phone_placeholder",
+        "text": "+61 400 000 000",
+        "source": "placeholder"
+      },
+      {
+        "slot": "email_placeholder",
+        "text": "enquiries@aftabandsons.com.au",
+        "source": "placeholder"
+      },
+      {
+        "slot": "owner_1_role",
+        "text": "Director",
+        "source": "placeholder"
+      },
+      {
+        "slot": "owner_2_role",
+        "text": "Director",
+        "source": "placeholder"
+      },
+      {
+        "slot": "service_1",
+        "text": "Truck Transport",
+        "source": "brief"
+      },
+      {
+        "slot": "service_2",
+        "text": "B-Double Freight",
+        "source": "brief"
+      },
+      {
+        "slot": "service_3",
+        "text": "Local Deliveries",
+        "source": "brief"
+      },
+      {
+        "slot": "service_4",
+        "text": "Interstate Freight",
+        "source": "brief"
+      }
+    ],
+    "fabrication_guardrails": [
+      "DO NOT invent testimonials.",
+      "DO NOT invent client logos.",
+      "DO NOT invent fleet size (e.g., '50+ trucks').",
+      "DO NOT invent years in business (e.g., 'Since 1990').",
+      "DO NOT invent numerical statistics.",
+      "DO NOT invent awards or certifications.",
+      "DO NOT invent pricing or delivery guarantees.",
+      "DO NOT invent response-time promises.",
+      "DO NOT invent specific service locations beyond 'Nationwide/Interstate/Local'.",
+      "DO NOT invent safety accreditations."
+    ]
+  },
+  "instructions_to_main_agent": "Use Bebas Neue for all H1/H2 tags and CTAs, with heavy tracking. Stick to a strict dark mode palette. Do NOT round container corners (use rounded-none or rounded-sm at most). Ensure all text is perfectly legible over images using bg-black/60 or similar overlays. Build the About section carefully featuring the two local owner photos provided. Hook up the form to POST /api/enquiries. DO NOT invent any company statistics or testimonials.",
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not center align the app container. No '.App { text-align: center; }'",
+    "Add 'data-testid' to all interactive elements.",
+    "Do not use generic AI emojis.",
+    "Use glass-morphism sparingly; rely more on solid dark colors with 1px silver borders for this industrial brand.",
+    "Ensure hover states exist for all clickable elements.",
+    "Use sonner for toast notifications."
+  ]
+}
