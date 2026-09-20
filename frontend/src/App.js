@@ -8,9 +8,10 @@ import About from "@/components/About";
 import Signature from "@/components/Signature";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import MobileActions from "@/components/MobileActions";
 
 const LandingPage = () => (
-  <div className="min-h-screen bg-[#0A0A0A] text-white antialiased">
+  <div className="min-h-screen bg-[#0A0A0A] pb-14 text-white antialiased lg:pb-0">
     <Header />
     <main id="main-content" tabIndex="-1">
       <Hero />
@@ -21,6 +22,7 @@ const LandingPage = () => (
       <Contact />
     </main>
     <Footer />
+    <MobileActions />
   </div>
 );
 
