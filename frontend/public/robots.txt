@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aftabandsons.com.au/sitemap.xml
+Sitemap: https://www.aftabandsons.com.au/sitemap.xml

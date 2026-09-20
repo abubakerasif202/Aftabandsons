@@ -3,7 +3,8 @@ import { SITE } from "../constants/site";
 
 const Footer = () => {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
   };
 
   return (
@@ -115,6 +116,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="AB Digital Solutions"
+              data-testid="footer-developer-link"
               className="inline-flex w-[155px] items-center opacity-85 transition duration-300 hover:scale-[1.01] hover:opacity-100 hover:brightness-110 focus-visible:outline-[#D4AF37] sm:w-[200px]"
             >
               <img

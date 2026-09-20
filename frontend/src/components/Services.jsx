@@ -43,7 +43,7 @@ const Services = () => (
                   width="1672"
                   height="941"
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent opacity-90" />
                 <span className="absolute top-3 right-4 font-display text-3xl font-bold tracking-wider text-[#C0C0C0]/30 transition-colors duration-300 group-hover:text-[#D4AF37]">

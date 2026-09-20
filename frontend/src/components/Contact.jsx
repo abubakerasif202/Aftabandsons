@@ -131,7 +131,9 @@ const Contact = () => {
   };
 
   const inputCls =
-    "rounded-none border-[#C0C0C0]/20 bg-[#141414] text-white placeholder:text-[#A1A1AA]/60 focus-visible:border-[#C81010] focus-visible:ring-1 focus-visible:ring-[#C81010] focus-visible:ring-offset-0 transition-colors duration-200";
+    "h-12 rounded-none border-[#C0C0C0]/20 bg-[#141414] text-white placeholder:text-[#A1A1AA]/60 focus-visible:border-[#C81010] focus-visible:ring-1 focus-visible:ring-[#C81010] focus-visible:ring-offset-0 transition-colors duration-200";
+
+  const errorTextCls = "text-[#FF9B9B]";
 
   return (
     <section
@@ -190,12 +192,12 @@ const Contact = () => {
                     autoComplete="name"
                     maxLength={120}
                     required
-                    className={`mt-2 ${inputCls}`}
+                    className={`mt-2 ${inputCls} ${errors.name ? "border-[#FF6B6B]" : ""}`}
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? "quote-name-error" : undefined}
                   />
                   {errors.name && (
-                    <p id="quote-name-error" data-testid="quote-name-error" role="alert" className="mt-2 text-xs text-[#C81010]">
+                    <p id="quote-name-error" data-testid="quote-name-error" role="alert" className={`mt-2 text-xs ${errorTextCls}`}>
                       {errors.name}
                     </p>
                   )}
@@ -215,12 +217,12 @@ const Contact = () => {
                     autoComplete="email"
                     maxLength={254}
                     required
-                    className={`mt-2 ${inputCls}`}
+                    className={`mt-2 ${inputCls} ${errors.email ? "border-[#FF6B6B]" : ""}`}
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? "quote-email-error" : undefined}
                   />
                   {errors.email && (
-                    <p id="quote-email-error" data-testid="quote-email-error" role="alert" className="mt-2 text-xs text-[#C81010]">
+                    <p id="quote-email-error" data-testid="quote-email-error" role="alert" className={`mt-2 text-xs ${errorTextCls}`}>
                       {errors.email}
                     </p>
                   )}
@@ -242,12 +244,12 @@ const Contact = () => {
                     autoComplete="tel"
                     inputMode="tel"
                     maxLength={40}
-                    className={`mt-2 ${inputCls}`}
+                    className={`mt-2 ${inputCls} ${errors.phone ? "border-[#FF6B6B]" : ""}`}
                     aria-invalid={!!errors.phone}
                     aria-describedby={errors.phone ? "quote-phone-error" : undefined}
                   />
                   {errors.phone && (
-                    <p id="quote-phone-error" data-testid="quote-phone-error" role="alert" className="mt-2 text-xs text-[#C81010]">
+                    <p id="quote-phone-error" data-testid="quote-phone-error" role="alert" className={`mt-2 text-xs ${errorTextCls}`}>
                       {errors.phone}
                     </p>
                   )}
@@ -266,7 +268,7 @@ const Contact = () => {
                       required
                       aria-invalid={!!errors.service}
                       aria-describedby={errors.service ? "quote-service-error" : undefined}
-                      className="flex h-9 w-full appearance-none rounded-none border border-[#C0C0C0]/20 bg-[#141414] px-3 pr-10 text-sm text-white focus:border-[#C81010] focus:outline-none focus:ring-1 focus:ring-[#C81010]"
+                      className={`flex h-12 w-full appearance-none rounded-none border border-[#C0C0C0]/20 bg-[#141414] px-3 pr-10 text-sm text-white focus:border-[#C81010] focus:outline-none focus:ring-1 focus:ring-[#C81010] ${errors.service ? "border-[#FF6B6B]" : ""}`}
                     >
                       <option value="" disabled>
                         Select a service
@@ -277,10 +279,10 @@ const Contact = () => {
                         </option>
                       ))}
                     </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-2.5 h-4 w-4 text-[#A1A1AA]" />
+                    <ChevronDown className="pointer-events-none absolute right-3 top-4 h-4 w-4 text-[#A1A1AA]" />
                   </div>
                   {errors.service && (
-                    <p id="quote-service-error" data-testid="quote-service-error" role="alert" className="mt-2 text-xs text-[#C81010]">
+                    <p id="quote-service-error" data-testid="quote-service-error" role="alert" className={`mt-2 text-xs ${errorTextCls}`}>
                       {errors.service}
                     </p>
                   )}
@@ -306,12 +308,12 @@ const Contact = () => {
                   minLength={10}
                   maxLength={4000}
                   required
-                  className={`mt-2 ${inputCls}`}
+                  className={`mt-2 min-h-[140px] ${inputCls} ${errors.message ? "border-[#FF6B6B]" : ""}`}
                   aria-invalid={!!errors.message}
                   aria-describedby={errors.message ? "quote-message-error" : undefined}
                 />
                 {errors.message && (
-                  <p id="quote-message-error" data-testid="quote-message-error" role="alert" className="mt-2 text-xs text-[#C81010]">
+                  <p id="quote-message-error" data-testid="quote-message-error" role="alert" className={`mt-2 text-xs ${errorTextCls}`}>
                     {errors.message}
                   </p>
                 )}

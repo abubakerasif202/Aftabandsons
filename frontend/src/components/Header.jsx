@@ -6,6 +6,7 @@ import {
   SheetTrigger,
   SheetClose,
   SheetTitle,
+  SheetDescription,
 } from "./ui/sheet";
 import { SITE } from "../constants/site";
 
@@ -41,8 +42,15 @@ const Header = () => {
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
+    let frameId;
+
+    const updateScrollState = () => {
+      frameId = undefined;
+
+      setScrolled((current) => {
+        const next = window.scrollY > 40;
+        return current === next ? current : next;
+      });
 
       // Bottom-of-page guard: activate contact when scrolled near document bottom
       if (
@@ -58,16 +66,25 @@ const Header = () => {
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const el = document.getElementById(sections[i]);
-        if (el && el.offsetTop <= scrollPosition) {
+        if (el && el.getBoundingClientRect().top + window.scrollY <= scrollPosition) {
           setActiveSection(sections[i]);
           break;
         }
       }
     };
 
-    onScroll();
+    const onScroll = () => {
+      if (frameId === undefined) {
+        frameId = window.requestAnimationFrame(updateScrollState);
+      }
+    };
+
+    updateScrollState();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frameId !== undefined) window.cancelAnimationFrame(frameId);
+    };
   }, []);
 
   return (
@@ -93,7 +110,7 @@ const Header = () => {
               <a
                 key={item.href}
                 href={item.href}
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isActive ? "location" : undefined}
                 data-testid={`nav-link-${item.label.toLowerCase()}`}
                 className={`relative py-1 text-sm font-semibold tracking-[0.18em] uppercase transition-colors duration-200 ${
                   isActive
@@ -136,6 +153,9 @@ const Header = () => {
               className="w-[300px] border-l border-[#C0C0C0]/15 bg-[#0A0A0A] p-0"
             >
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              <SheetDescription className="sr-only">
+                Use the navigation links to browse Aftab &amp; Sons Transport.
+              </SheetDescription>
               <div className="flex h-full flex-col px-8 pt-20">
                 {NAV.map((item) => {
                   const isActive = activeSection === item.href.substring(1);
@@ -143,7 +163,7 @@ const Header = () => {
                     <SheetClose asChild key={item.href}>
                       <a
                         href={item.href}
-                        aria-current={isActive ? "page" : undefined}
+                        aria-current={isActive ? "location" : undefined}
                         data-testid={`nav-mobile-link-${item.label.toLowerCase()}`}
                         className={`border-b border-[#C0C0C0]/10 py-4 font-display text-2xl tracking-[0.1em] uppercase transition-colors ${
                           isActive
