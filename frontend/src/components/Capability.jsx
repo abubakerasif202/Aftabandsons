@@ -6,17 +6,17 @@ const POINTS = [
   {
     icon: Truck,
     title: "Prime Movers",
-    text: "Modern prime-mover capability for commercial freight across Australian roads.",
+    text: "Prime-mover capability for commercial freight on Australian roads.",
   },
   {
     icon: Package,
     title: "B-Double Combinations",
-    text: "High-volume B-double freight — more payload per trip for efficient linehaul work.",
+    text: "B-double capability for high-volume freight and linehaul work.",
   },
   {
     icon: Route,
     title: "Local to Interstate",
-    text: "From local delivery runs to long-haul interstate routes, one team handles the lot.",
+    text: "Transport capability spanning local delivery work and interstate freight.",
   },
 ];
 
@@ -44,8 +44,7 @@ const Capability = () => {
             </h2>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-[#A1A1AA]">
               Truck transport and B-double freight are the backbone of what we
-              do. Every load is planned, secured and driven by people who treat
-              your freight like their own.
+              do, supporting commercial freight from pickup through delivery.
             </p>
 
             <div className="mt-12 space-y-8">
@@ -70,20 +69,19 @@ const Capability = () => {
             </div>
           </Reveal>
 
-          {/* Animated route line: a freight run drawing itself across the map */}
           <Reveal delay={0.2} className="lg:sticky lg:top-32">
             <div
               data-testid="capability-route-visual"
               className="relative border border-[#C0C0C0]/15 bg-[#0A0A0A] p-8 sm:p-12"
             >
               <p className="text-xs font-bold tracking-[0.4em] text-[#C0C0C0] uppercase">
-                Depot to Destination
+                Pickup to Delivery
               </p>
               <svg
                 viewBox="0 0 400 320"
                 className="mt-6 w-full"
                 role="img"
-                aria-label="Animated freight route from pickup to delivery"
+                aria-label="Freight route illustration from pickup to delivery"
               >
                 <path
                   d="M30 260 C 90 180, 140 280, 200 190 S 320 120, 370 60"
@@ -109,12 +107,12 @@ const Capability = () => {
                   PICKUP
                 </text>
                 <text x="322" y="44" fill="#C0C0C0" fontSize="11" letterSpacing="2">
-                  DELIVERED
+                  DELIVERY
                 </text>
               </svg>
               <p className="mt-6 border-t border-[#C0C0C0]/10 pt-6 text-sm leading-relaxed text-[#A1A1AA]">
-                One point of contact, door to door. You always know who is
-                carrying your freight — and where it is headed.
+                Freight transport capability for business loads, including
+                local delivery work and interstate B-double freight.
               </p>
             </div>
           </Reveal>
