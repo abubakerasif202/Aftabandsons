@@ -100,10 +100,27 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-[#C0C0C0]/10 pt-8 sm:flex-row sm:items-center">
-          <p className="text-xs tracking-[0.25em] text-[#A1A1AA] uppercase">
-            &copy; {new Date().getFullYear()} {SITE.name}
-          </p>
+        <div className="mt-14 flex flex-col items-start justify-between gap-6 border-t border-[#C0C0C0]/10 pt-8 sm:flex-row sm:items-center">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+            <p className="text-xs tracking-[0.25em] text-[#A1A1AA] uppercase">
+              &copy; {new Date().getFullYear()} {SITE.name}
+            </p>
+            <a
+              href="https://abwebstudio.com.au"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="AB Digital Solutions"
+              className="inline-flex w-[155px] items-center opacity-85 transition duration-300 hover:scale-[1.01] hover:opacity-100 hover:brightness-110 focus-visible:outline-[#D4AF37] sm:w-[200px]"
+            >
+              <img
+                src="/assets/ab-digital-solutions-footer.webp"
+                alt="AB Digital Solutions"
+                width="672"
+                height="309"
+                className="h-auto w-full"
+              />
+            </a>
+          </div>
           <p className="font-display text-sm tracking-[0.3em] text-[#D4AF37] uppercase">
             {SITE.tagline}
           </p>
