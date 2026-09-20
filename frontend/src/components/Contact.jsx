@@ -23,11 +23,13 @@ const Contact = () => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle");
+  const [submissionError, setSubmissionError] = useState("");
   const submittingRef = useRef(false);
 
   const set = (key) => (e) => {
     setForm((current) => ({ ...current, [key]: e.target.value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
+    setSubmissionError("");
     if (status === "sent") setStatus("idle");
   };
 
@@ -109,6 +111,7 @@ const Contact = () => {
       if (response.status === 201 && response.data?.status === "received") {
         setForm(initialForm);
         setErrors({});
+        setSubmissionError("");
         setStatus("sent");
         toast.success("Enquiry received", {
           description: "Thanks — your freight enquiry has been sent to our team.",
@@ -124,6 +127,7 @@ const Contact = () => {
       } else if (err.response?.status === 503) {
         desc = "The enquiry service is temporarily unavailable. Please call or WhatsApp us directly.";
       }
+      setSubmissionError(desc);
       toast.error("Enquiry not sent", { description: desc });
     } finally {
       submittingRef.current = false;
@@ -335,6 +339,16 @@ const Contact = () => {
                   </>
                 )}
               </button>
+
+              {submissionError && (
+                <div
+                  data-testid="quote-error-message"
+                  role="alert"
+                  className="border border-[#FF6B6B]/40 bg-[#3A1515] p-4 text-sm text-[#FFB4B4]"
+                >
+                  {submissionError}
+                </div>
+              )}
 
               {status === "sent" && (
                 <div
