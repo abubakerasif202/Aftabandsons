@@ -53,7 +53,7 @@ const Hero = () => {
                 times: [0, 0.12, 0.82, 1],
               }
         }
-        className="pointer-events-none absolute bottom-[17%] left-0 z-[1] flex items-center gap-3 text-[#D4AF37]"
+        className="pointer-events-none absolute bottom-[23%] left-0 z-[1] flex items-center gap-3 text-[#D4AF37]"
       >
         <span className="h-px w-20 bg-gradient-to-r from-transparent via-[#D4AF37]/70 to-[#D4AF37] sm:w-32" />
         <Truck className="h-16 w-16 drop-shadow-[0_0_14px_rgba(212,175,55,0.45)] sm:h-24 sm:w-24" />
