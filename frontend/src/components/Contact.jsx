@@ -8,37 +8,54 @@ import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 import { SITE, SERVICE_OPTIONS } from "../constants/site";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const backendOrigin = (process.env.REACT_APP_BACKEND_URL || "").replace(/\/+$/, "");
+const API = `${backendOrigin}/api`;
 
-const initialForm = { name: "", email: "", phone: "", service: "", message: "" };
+const initialForm = {
+  name: "",
+  email: "",
+  phone: "",
+  service: "",
+  message: "",
+  website: "",
+};
 
 const Contact = () => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState("idle"); // idle | sending | sent
+  const [status, setStatus] = useState("idle");
 
   const set = (key) => (e) => {
-    setForm((f) => ({ ...f, [key]: e.target.value }));
-    setErrors((err) => ({ ...err, [key]: undefined }));
+    setForm((current) => ({ ...current, [key]: e.target.value }));
+    setErrors((current) => ({ ...current, [key]: undefined }));
+    if (status === "sent") setStatus("idle");
   };
 
   const validate = () => {
-    const err = {};
-    if (form.name.trim().length < 2) err.name = "Please enter your name.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      err.email = "Please enter a valid email address.";
-    if (!form.service) err.service = "Please choose a service.";
-    if (form.message.trim().length < 10)
-      err.message = "Tell us a little more about your freight (10+ characters).";
-    setErrors(err);
-    return Object.keys(err).length === 0;
+    const nextErrors = {};
+    if (form.name.trim().length < 2) {
+      nextErrors.name = "Please enter your name.";
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      nextErrors.email = "Please enter a valid email address.";
+    }
+    if (!form.service) {
+      nextErrors.service = "Please choose a service.";
+    }
+    if (form.message.trim().length < 10) {
+      nextErrors.message = "Tell us a little more about your freight (10+ characters).";
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    if (status === "sending") return;
-    if (!validate()) return;
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    if (status === "sending" || !validate()) return;
+
     setStatus("sending");
+
     try {
       await axios.post(`${API}/enquiries`, {
         name: form.name.trim(),
@@ -46,16 +63,19 @@ const Contact = () => {
         phone: form.phone.trim() || null,
         service: form.service,
         message: form.message.trim(),
+        website: form.website,
       });
-      setStatus("sent");
+
       setForm(initialForm);
+      setErrors({});
+      setStatus("sent");
       toast.success("Enquiry received", {
-        description: "Thanks — the team will be in touch about your freight.",
+        description: "Thanks — your freight enquiry has been sent.",
       });
-    } catch (err) {
+    } catch {
       setStatus("idle");
-      toast.error("Something went wrong", {
-        description: "Your enquiry could not be sent. Please try again or call us.",
+      toast.error("Enquiry not sent", {
+        description: "Please try again, call us or send a WhatsApp message.",
       });
     }
   };
@@ -83,8 +103,8 @@ const Contact = () => {
               Let&apos;s Move Your Freight
             </h2>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-[#A1A1AA]">
-              Tell us what you need moved and where it is going. We will come
-              back with a straight answer.
+              Tell us what you need moved, where it is going and when you need
+              it transported. Our team can review the job and get back to you.
             </p>
 
             <form
@@ -93,6 +113,17 @@ const Contact = () => {
               noValidate
               className="mt-10 space-y-6"
             >
+              <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                <Label htmlFor="quote-website">Website</Label>
+                <Input
+                  id="quote-website"
+                  value={form.website}
+                  onChange={set("website")}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="quote-name" className="text-xs font-bold tracking-[0.2em] text-[#C0C0C0] uppercase">
@@ -104,15 +135,20 @@ const Contact = () => {
                     value={form.name}
                     onChange={set("name")}
                     placeholder="Your name"
+                    autoComplete="name"
+                    maxLength={120}
+                    required
                     className={`mt-2 ${inputCls}`}
                     aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? "quote-name-error" : undefined}
                   />
                   {errors.name && (
-                    <p data-testid="quote-name-error" className="mt-2 text-xs text-[#C81010]">
+                    <p id="quote-name-error" data-testid="quote-name-error" role="alert" className="mt-2 text-xs text-[#C81010]">
                       {errors.name}
                     </p>
                   )}
                 </div>
+
                 <div>
                   <Label htmlFor="quote-email" className="text-xs font-bold tracking-[0.2em] text-[#C0C0C0] uppercase">
                     Email *
@@ -124,11 +160,15 @@ const Contact = () => {
                     value={form.email}
                     onChange={set("email")}
                     placeholder="you@company.com.au"
+                    autoComplete="email"
+                    maxLength={254}
+                    required
                     className={`mt-2 ${inputCls}`}
                     aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? "quote-email-error" : undefined}
                   />
                   {errors.email && (
-                    <p data-testid="quote-email-error" className="mt-2 text-xs text-[#C81010]">
+                    <p id="quote-email-error" data-testid="quote-email-error" role="alert" className="mt-2 text-xs text-[#C81010]">
                       {errors.email}
                     </p>
                   )}
@@ -147,9 +187,13 @@ const Contact = () => {
                     value={form.phone}
                     onChange={set("phone")}
                     placeholder="Optional"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    maxLength={40}
                     className={`mt-2 ${inputCls}`}
                   />
                 </div>
+
                 <div>
                   <Label htmlFor="quote-service" className="text-xs font-bold tracking-[0.2em] text-[#C0C0C0] uppercase">
                     Service *
@@ -159,20 +203,22 @@ const Contact = () => {
                     data-testid="quote-service-select"
                     value={form.service}
                     onChange={set("service")}
+                    required
                     aria-invalid={!!errors.service}
+                    aria-describedby={errors.service ? "quote-service-error" : undefined}
                     className="mt-2 flex h-9 w-full rounded-none border border-[#C0C0C0]/20 bg-[#141414] px-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#C81010]"
                   >
                     <option value="" disabled>
                       Select a service
                     </option>
-                    {SERVICE_OPTIONS.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
+                    {SERVICE_OPTIONS.map((service) => (
+                      <option key={service} value={service}>
+                        {service}
                       </option>
                     ))}
                   </select>
                   {errors.service && (
-                    <p data-testid="quote-service-error" className="mt-2 text-xs text-[#C81010]">
+                    <p id="quote-service-error" data-testid="quote-service-error" role="alert" className="mt-2 text-xs text-[#C81010]">
                       {errors.service}
                     </p>
                   )}
@@ -190,11 +236,15 @@ const Contact = () => {
                   onChange={set("message")}
                   placeholder="What are you moving, from where to where, and roughly when?"
                   rows={5}
+                  minLength={10}
+                  maxLength={4000}
+                  required
                   className={`mt-2 ${inputCls}`}
                   aria-invalid={!!errors.message}
+                  aria-describedby={errors.message ? "quote-message-error" : undefined}
                 />
                 {errors.message && (
-                  <p data-testid="quote-message-error" className="mt-2 text-xs text-[#C81010]">
+                  <p id="quote-message-error" data-testid="quote-message-error" role="alert" className="mt-2 text-xs text-[#C81010]">
                     {errors.message}
                   </p>
                 )}
@@ -204,20 +254,21 @@ const Contact = () => {
                 type="submit"
                 data-testid="quote-submit-button"
                 disabled={status === "sending"}
-                className="inline-flex items-center gap-3 bg-[#C81010] px-10 py-4 font-display text-xl tracking-[0.12em] text-white uppercase transition-colors duration-200 hover:bg-[#A00D0D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-h-12 items-center gap-3 bg-[#C81010] px-10 py-4 font-display text-xl tracking-[0.12em] text-white uppercase transition-colors duration-200 hover:bg-[#A00D0D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {status === "sending" ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" /> Sending
+                    <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> Sending
                   </>
                 ) : (
                   <>
-                    <Send className="h-5 w-5" /> Send Enquiry
+                    <Send className="h-5 w-5" aria-hidden="true" /> Send Enquiry
                   </>
                 )}
               </button>
+
               {status === "sent" && (
-                <p data-testid="quote-success-message" className="text-sm text-[#D4AF37]">
+                <p data-testid="quote-success-message" role="status" className="text-sm text-[#D4AF37]">
                   Enquiry received — thanks, we will be in touch.
                 </p>
               )}
@@ -230,8 +281,7 @@ const Contact = () => {
                 Prefer to Talk?
               </h3>
               <p className="mt-4 text-sm leading-relaxed text-[#A1A1AA]">
-                Call or message us directly — you will speak with the family,
-                not a call centre.
+                Call, WhatsApp or email us directly about your freight.
               </p>
 
               <div className="mt-10 space-y-4">
@@ -240,7 +290,7 @@ const Contact = () => {
                   data-testid="contact-call-button"
                   className="flex items-center gap-4 border border-[#C0C0C0]/20 px-6 py-5 transition-colors duration-200 hover:border-[#D4AF37]"
                 >
-                  <Phone className="h-5 w-5 text-[#D4AF37]" />
+                  <Phone className="h-5 w-5 text-[#D4AF37]" aria-hidden="true" />
                   <span>
                     <span className="block text-xs font-bold tracking-[0.25em] text-[#A1A1AA] uppercase">
                       Call Us
@@ -250,6 +300,7 @@ const Contact = () => {
                     </span>
                   </span>
                 </a>
+
                 <a
                   href={SITE.whatsappHref}
                   target="_blank"
@@ -257,27 +308,28 @@ const Contact = () => {
                   data-testid="contact-whatsapp-button"
                   className="flex items-center gap-4 border border-[#C0C0C0]/20 px-6 py-5 transition-colors duration-200 hover:border-[#D4AF37]"
                 >
-                  <MessageCircle className="h-5 w-5 text-[#D4AF37]" />
+                  <MessageCircle className="h-5 w-5 text-[#D4AF37]" aria-hidden="true" />
                   <span>
                     <span className="block text-xs font-bold tracking-[0.25em] text-[#A1A1AA] uppercase">
                       WhatsApp
                     </span>
                     <span className="block text-lg font-semibold text-white">
-                      Message us anytime
+                      Message us
                     </span>
                   </span>
                 </a>
+
                 <a
                   href={`mailto:${SITE.email}`}
                   data-testid="contact-email-button"
                   className="flex items-center gap-4 border border-[#C0C0C0]/20 px-6 py-5 transition-colors duration-200 hover:border-[#D4AF37]"
                 >
-                  <Mail className="h-5 w-5 text-[#D4AF37]" />
+                  <Mail className="h-5 w-5 text-[#D4AF37]" aria-hidden="true" />
                   <span>
                     <span className="block text-xs font-bold tracking-[0.25em] text-[#A1A1AA] uppercase">
                       Email
                     </span>
-                    <span className="block text-lg font-semibold text-white">
+                    <span className="block break-all text-base font-semibold text-white sm:text-lg">
                       {SITE.email}
                     </span>
                   </span>
