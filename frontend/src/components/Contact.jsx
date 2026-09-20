@@ -260,7 +260,14 @@ const Contact = () => {
                     inputMode="tel"
                     maxLength={40}
                     className={`mt-2 ${inputCls}`}
+                    aria-invalid={!!errors.phone}
+                    aria-describedby={errors.phone ? "quote-phone-error" : undefined}
                   />
+                  {errors.phone && (
+                    <p id="quote-phone-error" data-testid="quote-phone-error" role="alert" className="mt-2 text-xs text-[#C81010]">
+                      {errors.phone}
+                    </p>
+                  )}
                 </div>
 
                 <div>
