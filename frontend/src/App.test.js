@@ -104,14 +104,26 @@ describe("header and navigation", () => {
 });
 
 describe("hero and services", () => {
-  test("renders the main heading and both hero conversion anchors", () => {
+  test("renders the hero section with radar beacon, headlines, CTAs, and capability badges", () => {
     render(<Hero />);
 
     expect(screen.getByTestId("hero-opening-truck")).toBeInTheDocument();
+    expect(screen.getByTestId("hero-radar-pulse")).toBeInTheDocument();
     expect(screen.getByTestId("hero-headline")).toHaveTextContent("Australia");
     expect(screen.getByTestId("hero-headline")).toHaveTextContent("Moving");
-    expect(screen.getByTestId("hero-quote-button")).toHaveAttribute("href", "#contact");
-    expect(screen.getByTestId("hero-services-button")).toHaveAttribute("href", "#services");
+
+    const quoteBtn = screen.getByTestId("hero-quote-button");
+    expect(quoteBtn).toHaveAttribute("href", "#contact");
+    expect(quoteBtn).toHaveTextContent("Request a Freight Quote");
+
+    const servicesBtn = screen.getByTestId("hero-services-button");
+    expect(servicesBtn).toHaveAttribute("href", "#services");
+    expect(servicesBtn).toHaveTextContent("View Fleet & Services");
+
+    const attributes = screen.getByTestId("hero-attributes");
+    expect(attributes).toHaveTextContent("Interstate Linehaul");
+    expect(attributes).toHaveTextContent("B-Double Capability");
+    expect(attributes).toHaveTextContent("Direct Line Dispatch");
   });
 
   test("renders every supplied service card and links each to contact", () => {

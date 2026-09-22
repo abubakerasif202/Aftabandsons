@@ -105,7 +105,7 @@ const Header = () => {
                 href={item.href}
                 aria-current={isActive ? "location" : undefined}
                 data-testid={`nav-link-${sectionId}`}
-                className={`relative py-1 text-sm font-semibold tracking-[0.18em] uppercase transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] ${
+                className={`group relative py-1 text-sm font-semibold tracking-[0.18em] uppercase transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] ${
                   isActive
                     ? "text-[#D4AF37]"
                     : "text-[#C0C0C0] hover:text-white"
@@ -114,7 +114,7 @@ const Header = () => {
                 {item.label}
                 <span
                   className={`absolute -bottom-1 left-0 h-0.5 bg-[#D4AF37] transition-all duration-300 ${
-                    isActive ? "w-full" : "w-0 hover:w-full"
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                 />
               </a>
@@ -179,14 +179,16 @@ const Header = () => {
                     Request a Quote
                   </a>
                 </SheetClose>
-                <a
-                  href={SITE.phoneHref}
-                  data-testid="nav-mobile-call-link"
-                  className="mt-6 flex items-center gap-3 text-sm tracking-wider text-[#C0C0C0] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
-                >
-                  <Phone className="h-4 w-4 text-[#D4AF37]" />
-                  {SITE.phoneDisplay}
-                </a>
+                <SheetClose asChild>
+                  <a
+                    href={SITE.phoneHref}
+                    data-testid="nav-mobile-call-link"
+                    className="mt-6 flex items-center gap-3 text-sm tracking-wider text-[#C0C0C0] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+                  >
+                    <Phone className="h-4 w-4 text-[#D4AF37]" />
+                    {SITE.phoneDisplay}
+                  </a>
+                </SheetClose>
               </div>
             </SheetContent>
           </Sheet>
