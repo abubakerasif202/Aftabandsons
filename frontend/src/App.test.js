@@ -5,6 +5,7 @@ import Services from "./components/Services";
 import Contact from "./components/Contact";
 import MobileActions from "./components/MobileActions";
 import FleetShowcase from "./components/FleetShowcase";
+import RoutesNetwork from "./components/RoutesNetwork";
 import App from "./App";
 import {
   FLEET_SPECS,
@@ -330,11 +331,68 @@ describe("fleet engineering showcase", () => {
     });
   });
 
-  test("renders FleetShowcase inside App between services and capability", () => {
+  test("renders FleetShowcase inside App between services and routes network", () => {
     render(<App />);
     expect(screen.getByTestId("fleet-showcase-section")).toBeInTheDocument();
     expect(screen.getByTestId("services-section")).toBeInTheDocument();
-    expect(screen.getByTestId("capabilities-section")).toBeInTheDocument();
+  });
+});
+
+describe("interstate routes network", () => {
+  test("renders RoutesNetwork component with id and data-testid", () => {
+    render(<RoutesNetwork />);
+    const section = screen.getByTestId("routes-section");
+    expect(section).toBeInTheDocument();
+    expect(section).toHaveAttribute("id", "routes");
+  });
+
+  test("renders headline CONNECTING AUSTRALIA'S MAJOR FREIGHT HUBS", () => {
+    render(<RoutesNetwork />);
+    expect(
+      screen.getByRole("heading", {
+        name: /CONNECTING AUSTRALIA'S MAJOR FREIGHT HUBS/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  test("renders all 4 corridors from ROUTES with corridor tags and statuses", () => {
+    render(<RoutesNetwork />);
+
+    ROUTES.forEach((route) => {
+      const card = screen.getByTestId(`route-card-${route.id}`);
+      expect(card).toBeInTheDocument();
+      expect(card).toHaveTextContent(route.name);
+      expect(card).toHaveTextContent(route.corridorTag);
+      expect(card).toHaveTextContent(route.status);
+    });
+
+    expect(screen.getByText("Melbourne <-> Sydney")).toBeInTheDocument();
+    expect(screen.getByText("Sydney <-> Brisbane")).toBeInTheDocument();
+    expect(screen.getByText("Melbourne <-> Adelaide")).toBeInTheDocument();
+    expect(screen.getByText("Regional & Custom")).toBeInTheDocument();
+  });
+
+  test("renders SVG route visualizer with pickup, delivery nodes and respects useReducedMotion", () => {
+    render(<RoutesNetwork />);
+
+    const visualizer = screen.getByTestId("routes-visualizer");
+    expect(visualizer).toBeInTheDocument();
+
+    const svg = screen.getByTestId("routes-map-svg");
+    expect(svg).toBeInTheDocument();
+
+    expect(screen.getByTestId("visualizer-node-pickup")).toBeInTheDocument();
+    expect(screen.getByTestId("visualizer-node-delivery")).toBeInTheDocument();
+    expect(within(svg).getByText(/PICKUP/i)).toBeInTheDocument();
+    expect(within(svg).getByText(/DELIVERY/i)).toBeInTheDocument();
+
+    // Since useReducedMotion returns true in jest.mock, animated pulse elements should not be rendered
+    expect(visualizer.querySelector("animateMotion")).not.toBeInTheDocument();
+  });
+
+  test("renders RoutesNetwork inside App as part of landing page", () => {
+    render(<App />);
+    expect(screen.getByTestId("routes-section")).toBeInTheDocument();
   });
 });
 

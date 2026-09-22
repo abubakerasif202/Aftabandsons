@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import FleetShowcase from "@/components/FleetShowcase";
-import Capability from "@/components/Capability";
+import RoutesNetwork from "@/components/RoutesNetwork";
 import About from "@/components/About";
 import Signature from "@/components/Signature";
 import Contact from "@/components/Contact";
@@ -17,7 +17,7 @@ const LandingPage = () => (
       <Hero />
       <Services />
       <FleetShowcase />
-      <Capability />
+      <RoutesNetwork />
       <Signature />
       <About />
       <Contact />
