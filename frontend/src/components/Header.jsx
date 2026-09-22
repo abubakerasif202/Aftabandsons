@@ -8,15 +8,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "./ui/sheet";
-import { SITE } from "../constants/site";
-
-const NAV = [
-  { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Capabilities", href: "#capabilities" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
-];
+import { SITE, NAV } from "../constants/site";
 
 const Logo = () => (
   <a
@@ -101,18 +93,19 @@ const Header = () => {
 
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-8 lg:flex"
+          className="hidden items-center gap-8 xl:flex"
           data-testid="nav-desktop"
         >
           {NAV.map((item) => {
-            const isActive = activeSection === item.href.substring(1);
+            const sectionId = item.href.replace("#", "");
+            const isActive = activeSection === sectionId;
             return (
               <a
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? "location" : undefined}
-                data-testid={`nav-link-${item.label.toLowerCase()}`}
-                className={`relative py-1 text-sm font-semibold tracking-[0.18em] uppercase transition-colors duration-200 ${
+                data-testid={`nav-link-${sectionId}`}
+                className={`relative py-1 text-sm font-semibold tracking-[0.18em] uppercase transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] ${
                   isActive
                     ? "text-[#D4AF37]"
                     : "text-[#C0C0C0] hover:text-white"
@@ -130,20 +123,20 @@ const Header = () => {
           <a
             href="#contact"
             data-testid="nav-quote-button"
-            className="btn-shine-overlay group flex items-center gap-2 bg-[#C81010] px-6 py-3 font-display text-lg tracking-[0.12em] text-white uppercase transition-all duration-200 hover:bg-[#A00D0D] hover:shadow-[0_0_20px_rgba(200,16,16,0.4)]"
+            className="btn-shine-overlay group flex items-center gap-2 bg-[#C81010] px-6 py-3 font-display text-lg tracking-[0.12em] text-white uppercase transition-all duration-200 hover:bg-[#A00D0D] hover:shadow-[0_0_20px_rgba(200,16,16,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
           >
             Request a Quote
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </a>
         </nav>
 
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <Sheet>
             <SheetTrigger asChild>
               <button
                 data-testid="nav-mobile-menu-button"
                 aria-label="Open menu"
-                className="flex h-11 w-11 items-center justify-center border border-[#C0C0C0]/30 text-white transition-colors duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37]"
+                className="flex h-11 w-11 items-center justify-center border border-[#C0C0C0]/30 text-white transition-colors duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
               >
                 <Menu className="h-5 w-5" />
               </button>
@@ -158,14 +151,15 @@ const Header = () => {
               </SheetDescription>
               <div className="flex h-full flex-col px-8 pt-20">
                 {NAV.map((item) => {
-                  const isActive = activeSection === item.href.substring(1);
+                  const sectionId = item.href.replace("#", "");
+                  const isActive = activeSection === sectionId;
                   return (
                     <SheetClose asChild key={item.href}>
                       <a
                         href={item.href}
                         aria-current={isActive ? "location" : undefined}
-                        data-testid={`nav-mobile-link-${item.label.toLowerCase()}`}
-                        className={`border-b border-[#C0C0C0]/10 py-4 font-display text-2xl tracking-[0.1em] uppercase transition-colors ${
+                        data-testid={`nav-mobile-link-${sectionId}`}
+                        className={`border-b border-[#C0C0C0]/10 py-4 font-display text-2xl tracking-[0.1em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] ${
                           isActive
                             ? "text-[#D4AF37]"
                             : "text-white hover:text-[#D4AF37]"
@@ -180,7 +174,7 @@ const Header = () => {
                   <a
                     href="#contact"
                     data-testid="nav-mobile-quote-button"
-                    className="btn-shine-overlay mt-8 bg-[#C81010] px-6 py-4 text-center font-display text-xl tracking-[0.12em] text-white uppercase hover:bg-[#A00D0D]"
+                    className="btn-shine-overlay mt-8 bg-[#C81010] px-6 py-4 text-center font-display text-xl tracking-[0.12em] text-white uppercase hover:bg-[#A00D0D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
                   >
                     Request a Quote
                   </a>
@@ -188,7 +182,7 @@ const Header = () => {
                 <a
                   href={SITE.phoneHref}
                   data-testid="nav-mobile-call-link"
-                  className="mt-6 flex items-center gap-3 text-sm tracking-wider text-[#C0C0C0] transition-colors hover:text-white"
+                  className="mt-6 flex items-center gap-3 text-sm tracking-wider text-[#C0C0C0] transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
                 >
                   <Phone className="h-4 w-4 text-[#D4AF37]" />
                   {SITE.phoneDisplay}

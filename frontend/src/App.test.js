@@ -1,8 +1,9 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
+import MobileActions from "./components/MobileActions";
 import {
   FLEET_SPECS,
   NAV,
@@ -54,20 +55,51 @@ describe("header and navigation", () => {
     expect(screen.getByTestId("nav-quote-button")).toHaveAttribute("href", "#contact");
   });
 
-  test("opens and closes the accessible mobile menu", async () => {
+  test("renders all navigation links from NAV in desktop navigation", () => {
+    render(<Header />);
+    const desktopNav = screen.getByTestId("nav-desktop");
+
+    NAV.forEach((item) => {
+      const link = within(desktopNav).getByRole("link", { name: item.label });
+      expect(link).toHaveAttribute("href", item.href);
+    });
+
+    ["#services", "#fleet", "#routes", "#safety", "#about", "#contact"].forEach((href) => {
+      expect(desktopNav.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
+    });
+  });
+
+  test("opens mobile menu and renders all NAV links in the dialog", async () => {
     render(<Header />);
 
     fireEvent.click(screen.getByTestId("nav-mobile-menu-button"));
-    expect(screen.getByRole("dialog", { name: "Navigation Menu" })).toBeInTheDocument();
-    expect(screen.getByTestId("nav-mobile-link-services")).toHaveAttribute(
-      "href",
-      "#services",
-    );
+    const dialog = screen.getByRole("dialog", { name: "Navigation Menu" });
+    expect(dialog).toBeInTheDocument();
+
+    NAV.forEach((item) => {
+      const link = within(dialog).getByRole("link", { name: item.label });
+      expect(link).toHaveAttribute("href", item.href);
+    });
 
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     await waitFor(() =>
       expect(screen.queryByRole("dialog", { name: "Navigation Menu" })).not.toBeInTheDocument(),
     );
+  });
+
+  test("renders MobileActions component with Call and Quote Request buttons", () => {
+    render(<MobileActions />);
+
+    const actionsNav = screen.getByTestId("mobile-actions");
+    expect(actionsNav).toBeInTheDocument();
+
+    const callButton = screen.getByTestId("mobile-call-action");
+    expect(callButton).toHaveAttribute("href", SITE.phoneHref);
+    expect(callButton).toHaveTextContent(/Call/i);
+
+    const quoteButton = screen.getByTestId("mobile-quote-action");
+    expect(quoteButton).toHaveAttribute("href", "#contact");
+    expect(quoteButton).toHaveTextContent(/Quote Request|Request Quote/i);
   });
 });
 
