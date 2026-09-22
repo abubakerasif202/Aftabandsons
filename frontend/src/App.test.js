@@ -4,6 +4,8 @@ import Hero from "./components/Hero";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
 import MobileActions from "./components/MobileActions";
+import FleetShowcase from "./components/FleetShowcase";
+import App from "./App";
 import {
   FLEET_SPECS,
   NAV,
@@ -39,6 +41,9 @@ jest.mock("framer-motion", () => {
   return {
     motion: new Proxy({}, { get: (_target, tag) => componentFor(tag) }),
     useReducedMotion: () => true,
+    useInView: () => true,
+    useScroll: () => ({ scrollYProgress: { get: () => 0 } }),
+    useTransform: () => "0%",
   };
 });
 
@@ -276,3 +281,60 @@ describe("central data constants", () => {
     });
   });
 });
+
+describe("fleet engineering showcase", () => {
+  test("renders FleetShowcase component with id, testid, and heading", () => {
+    render(<FleetShowcase />);
+
+    const section = screen.getByTestId("fleet-showcase-section");
+    expect(section).toBeInTheDocument();
+    expect(section).toHaveAttribute("id", "fleet");
+    expect(
+      screen.getByRole("heading", { name: /ENGINEERED FOR THE LONG HAUL/i }),
+    ).toBeInTheDocument();
+  });
+
+  test("renders chassis spotlight card with badge, title and spec attributes", () => {
+    render(<FleetShowcase />);
+
+    expect(screen.getByText(FLEET_SPECS.chassis.badge)).toBeInTheDocument();
+    expect(screen.getByText(FLEET_SPECS.chassis.title)).toBeInTheDocument();
+
+    FLEET_SPECS.chassis.specs.forEach((spec) => {
+      expect(screen.getByText(spec.label)).toBeInTheDocument();
+      expect(screen.getByText(spec.value)).toBeInTheDocument();
+    });
+  });
+
+  test("renders pre-trip inspection card with title, badge, and checklist items", () => {
+    render(<FleetShowcase />);
+
+    expect(screen.getByText(FLEET_SPECS.inspection.title)).toBeInTheDocument();
+    expect(screen.getByText(FLEET_SPECS.inspection.badge)).toBeInTheDocument();
+    expect(screen.getByText(FLEET_SPECS.inspection.description)).toBeInTheDocument();
+
+    FLEET_SPECS.inspection.items.forEach((item) => {
+      expect(screen.getByText(item)).toBeInTheDocument();
+    });
+  });
+
+  test("renders highway discipline card with title, badge, and operational items", () => {
+    render(<FleetShowcase />);
+
+    expect(screen.getByText(FLEET_SPECS.discipline.title)).toBeInTheDocument();
+    expect(screen.getByText(FLEET_SPECS.discipline.badge)).toBeInTheDocument();
+    expect(screen.getByText(FLEET_SPECS.discipline.description)).toBeInTheDocument();
+
+    FLEET_SPECS.discipline.items.forEach((item) => {
+      expect(screen.getByText(item)).toBeInTheDocument();
+    });
+  });
+
+  test("renders FleetShowcase inside App between services and capability", () => {
+    render(<App />);
+    expect(screen.getByTestId("fleet-showcase-section")).toBeInTheDocument();
+    expect(screen.getByTestId("services-section")).toBeInTheDocument();
+    expect(screen.getByTestId("capabilities-section")).toBeInTheDocument();
+  });
+});
+
