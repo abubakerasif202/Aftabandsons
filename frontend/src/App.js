@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import FleetShowcase from "@/components/FleetShowcase";
 import RoutesNetwork from "@/components/RoutesNetwork";
+import SafetyStandards from "@/components/SafetyStandards";
 import About from "@/components/About";
 import Signature from "@/components/Signature";
 import Contact from "@/components/Contact";
@@ -18,6 +19,7 @@ const LandingPage = () => (
       <Services />
       <FleetShowcase />
       <RoutesNetwork />
+      <SafetyStandards />
       <Signature />
       <About />
       <Contact />

@@ -6,6 +6,7 @@ import Contact from "./components/Contact";
 import MobileActions from "./components/MobileActions";
 import FleetShowcase from "./components/FleetShowcase";
 import RoutesNetwork from "./components/RoutesNetwork";
+import SafetyStandards from "./components/SafetyStandards";
 import App from "./App";
 import {
   FLEET_SPECS,
@@ -395,4 +396,56 @@ describe("interstate routes network", () => {
     expect(screen.getByTestId("routes-section")).toBeInTheDocument();
   });
 });
+
+describe("safety and reliability standards", () => {
+  test("renders SafetyStandards component with id and data-testid", () => {
+    render(<SafetyStandards />);
+    const section = screen.getByTestId("safety-section");
+    expect(section).toBeInTheDocument();
+    expect(section).toHaveAttribute("id", "safety");
+  });
+
+  test("renders eyebrow CORE OPERATIONAL PILLARS with gold accent rule", () => {
+    render(<SafetyStandards />);
+    const eyebrow = screen.getByTestId("safety-eyebrow");
+    expect(eyebrow).toBeInTheDocument();
+    expect(eyebrow).toHaveTextContent(/CORE OPERATIONAL PILLARS/i);
+    const rule = eyebrow.querySelector(".bg-\\[\\#D4AF37\\]");
+    expect(rule).toBeInTheDocument();
+  });
+
+  test("renders heading FOUNDATIONS OF RELIABILITY and narrative", () => {
+    render(<SafetyStandards />);
+    expect(
+      screen.getByRole("heading", {
+        name: /FOUNDATIONS OF RELIABILITY/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Verifiable principles ensuring consistent commercial performance/i),
+    ).toBeInTheDocument();
+  });
+
+  test("renders all 4 pillars from SAFETY_PILLARS with titles, descriptions, and testids", () => {
+    render(<SafetyStandards />);
+
+    SAFETY_PILLARS.forEach((pillar) => {
+      const card = screen.getByTestId(`safety-pillar-${pillar.id}`);
+      expect(card).toBeInTheDocument();
+      expect(card).toHaveTextContent(pillar.title);
+      expect(card).toHaveTextContent(pillar.description);
+    });
+
+    expect(screen.getByText("Road Safety First")).toBeInTheDocument();
+    expect(screen.getByText("Direct Line Dispatch")).toBeInTheDocument();
+    expect(screen.getByText("Punctual Transit")).toBeInTheDocument();
+    expect(screen.getByText("Modern Fleet Setups")).toBeInTheDocument();
+  });
+
+  test("renders SafetyStandards inside App between routes network and signature", () => {
+    render(<App />);
+    expect(screen.getByTestId("safety-section")).toBeInTheDocument();
+  });
+});
+
 

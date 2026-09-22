@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Navigation, Route as RouteIcon, MapPin, ArrowRight } from "lucide-react";
+import { Navigation, ArrowRight } from "lucide-react";
 import Reveal from "./motion/Reveal";
 import { ROUTES } from "../constants/site";
 
