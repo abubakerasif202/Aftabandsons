@@ -3,7 +3,14 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
-import { SERVICES, SITE } from "./constants/site";
+import {
+  FLEET_SPECS,
+  NAV,
+  ROUTES,
+  SAFETY_PILLARS,
+  SERVICES,
+  SITE,
+} from "./constants/site";
 
 jest.mock("framer-motion", () => {
   const React = require("react");
@@ -88,15 +95,49 @@ describe("hero and services", () => {
   });
 });
 
-describe("static contact options", () => {
-  test("replaces the quote form with direct contact options", () => {
+describe("contact options and quote submission", () => {
+  test("renders a quote form alongside direct contact options", () => {
     render(<Contact />);
 
     expect(screen.getByTestId("contact-direct-panel")).toBeInTheDocument();
-    expect(screen.queryByTestId("quote-form")).not.toBeInTheDocument();
-    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
-    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.getByTestId("quote-form")).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Service needed" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Send Quote Request" })).toBeInTheDocument();
+  });
+
+  test("sends quote details to Web3Forms and confirms success", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true }),
+    });
+    render(<Contact />);
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Name" }), { target: { value: "Test Name" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "Phone" }), { target: { value: "0400000000" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "Email" }), { target: { value: "test@example.com" } });
+    fireEvent.change(screen.getByRole("combobox", { name: "Service needed" }), { target: { value: "Truck Transport" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "Freight details" }), { target: { value: "Freight details" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send Quote Request" }));
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledWith("https://api.web3forms.com/submit", expect.objectContaining({ method: "POST" })));
+    expect(await screen.findByRole("status")).toHaveTextContent("quote request has been sent");
+  });
+
+  test("shows inline guidance and focuses the first incomplete quote field", () => {
+    render(<Contact />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Send Quote Request" }));
+
+    const name = screen.getByRole("textbox", { name: /^Name/ });
+    expect(name).toHaveFocus();
+    expect(name).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByText("Enter your name so we know who to contact.")).toBeInTheDocument();
+    expect(screen.getByText("Choose the service that best fits your freight.")).toBeInTheDocument();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   test("keeps the verified phone, email and accessible direct-contact links", () => {
@@ -110,5 +151,77 @@ describe("static contact options", () => {
     );
     expect(screen.getByTestId("contact-email-button")).toHaveTextContent(SITE.email);
     expect(document.body.textContent).not.toMatch(/555[-\s)]|your@email|example\.com\.au/i);
+  });
+});
+
+describe("central data constants", () => {
+  test("verifies SITE has name, phoneDisplay, phoneHref, whatsappHref, email, tagline", () => {
+    expect(SITE).toBeDefined();
+    expect(SITE.name).toBe("Aftab & Sons Transport");
+    expect(SITE.phoneDisplay).toBe("+61 448 747 518");
+    expect(SITE.phoneHref).toBe("tel:+61448747518");
+    expect(SITE.whatsappHref).toBe("https://wa.me/61448747518");
+    expect(SITE.email).toBe("admin@aftabandsons.com.au");
+    expect(SITE.tagline).toBe("Australia Keeps Moving");
+  });
+
+  test("verifies ROUTES is an array of corridors with name, corridor, corridorTag, and status", () => {
+    expect(Array.isArray(ROUTES)).toBe(true);
+    expect(ROUTES.length).toBeGreaterThanOrEqual(4);
+
+    const names = ROUTES.map((r) => r.name);
+    expect(names).toContain("Melbourne <-> Sydney");
+    expect(names).toContain("Sydney <-> Brisbane");
+    expect(names).toContain("Melbourne <-> Adelaide");
+    expect(names).toContain("Regional & Custom");
+
+    ROUTES.forEach((route) => {
+      expect(route.name).toBeTruthy();
+      expect(route.corridor).toBeTruthy();
+      expect(route.corridorTag).toBeTruthy();
+      expect(route.status).toBeTruthy();
+    });
+  });
+
+  test("verifies SAFETY_PILLARS has the 4 pillars with title, description, and icon name or accent", () => {
+    expect(Array.isArray(SAFETY_PILLARS)).toBe(true);
+    expect(SAFETY_PILLARS).toHaveLength(4);
+
+    const titles = SAFETY_PILLARS.map((p) => p.title);
+    expect(titles).toContain("Road Safety First");
+    expect(titles).toContain("Direct Line Dispatch");
+    expect(titles).toContain("Punctual Transit");
+    expect(titles).toContain("Modern Fleet Setups");
+
+    SAFETY_PILLARS.forEach((pillar) => {
+      expect(pillar.title).toBeTruthy();
+      expect(pillar.description).toBeTruthy();
+      expect(Boolean(pillar.icon || pillar.accent)).toBe(true);
+    });
+  });
+
+  test("verifies FLEET_SPECS has chassis and inspection specifications from Stitch design", () => {
+    expect(FLEET_SPECS).toBeDefined();
+    expect(FLEET_SPECS.chassis).toBeDefined();
+    expect(FLEET_SPECS.chassis.title).toBeTruthy();
+    expect(FLEET_SPECS.inspection).toBeDefined();
+    expect(FLEET_SPECS.inspection.title).toBeTruthy();
+  });
+
+  test("verifies NAV has anchors: #home, #services, #fleet, #routes, #safety, #about, #contact", () => {
+    expect(Array.isArray(NAV)).toBe(true);
+    const anchors = NAV.map((item) => item.href);
+    const requiredAnchors = [
+      "#home",
+      "#services",
+      "#fleet",
+      "#routes",
+      "#safety",
+      "#about",
+      "#contact",
+    ];
+    requiredAnchors.forEach((anchor) => {
+      expect(anchors).toContain(anchor);
+    });
   });
 });
