@@ -20,7 +20,7 @@ business facts.
 
 - Frontend: React 19 + Tailwind + Framer Motion with CRA/CRACO, single-page landing at `/`
 - Contact source of truth: `frontend/src/constants/site.js`
-- Contact actions: verified `tel:`, WhatsApp and `mailto:` links; no submission form
+- Contact actions: Web3Forms freight quote form plus verified `tel:`, WhatsApp and `mailto:` fallbacks
 - Assets: `frontend/public/assets/`
 - Deployment: Vercel serves the compiled `frontend/build` directory
 - Runtime: static frontend only; no API, database, Python runtime or backend environment variables
@@ -29,7 +29,7 @@ business facts.
 
 - Sticky header with accessible mobile menu and quote anchors
 - Hero, four service cards, animated capability route, signature section and about imagery
-- Static direct-contact panel with verified phone, WhatsApp and email links
+- Web3Forms quote form with verified phone, WhatsApp and email fallbacks
 - SEO metadata, responsive layout, keyboard focus states and reduced-motion support
 - Authentic logo, fleet imagery and owner imagery retained from the supplied assets
 

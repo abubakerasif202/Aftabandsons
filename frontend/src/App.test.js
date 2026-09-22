@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
-import { SERVICES, SITE } from "./constants/site";
+import { SERVICES, SERVICE_OPTIONS, SITE } from "./constants/site";
 
 jest.mock("framer-motion", () => {
   const React = require("react");
@@ -88,15 +88,50 @@ describe("hero and services", () => {
   });
 });
 
-describe("static contact options", () => {
-  test("replaces the quote form with direct contact options", () => {
+describe("Web3Forms quote form", () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test("renders the quote fields and direct contact fallbacks", () => {
     render(<Contact />);
 
-    expect(screen.getByTestId("contact-direct-panel")).toBeInTheDocument();
-    expect(screen.queryByTestId("quote-form")).not.toBeInTheDocument();
-    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
-    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.getByTestId("quote-form")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-name-input")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-email-input")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-service-select")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-message-input")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-submit-button")).toBeInTheDocument();
+  });
+
+  test("validates required quote details before submission", () => {
+    render(<Contact />);
+    fireEvent.click(screen.getByTestId("quote-submit-button"));
+    expect(screen.getByTestId("quote-name-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-email-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-service-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-message-error")).toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test("submits valid freight details to Web3Forms", async () => {
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true }) });
+    render(<Contact />);
+    fireEvent.change(screen.getByTestId("quote-name-input"), { target: { value: "Test Customer" } });
+    fireEvent.change(screen.getByTestId("quote-email-input"), { target: { value: "customer@example.com" } });
+    fireEvent.change(screen.getByTestId("quote-service-select"), { target: { value: SERVICE_OPTIONS[0] } });
+    fireEvent.change(screen.getByTestId("quote-message-input"), { target: { value: "Freight from Sydney to Melbourne next week." } });
+    fireEvent.click(screen.getByTestId("quote-submit-button"));
+
+    await waitFor(() => expect(screen.getByTestId("quote-success-message")).toBeInTheDocument());
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.web3forms.com/submit",
+      expect.objectContaining({ method: "POST" }),
+    );
   });
 
   test("keeps the verified phone, email and accessible direct-contact links", () => {

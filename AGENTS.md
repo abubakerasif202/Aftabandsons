@@ -35,8 +35,8 @@ If a fact is uncertain, omit it instead of guessing.
 - Maintain keyboard focus states, reduced-motion support and semantic labels.
 - Do not reintroduce Emergent/PostHog tracking scripts unless explicitly requested.
 - Keep contact details in `frontend/src/constants/site.js`, not duplicated across components.
-- Keep contact actions as direct `tel:`, WhatsApp and `mailto:` links; do not add a fake submission form.
-- Do not add API, database or backend configuration to the frontend.
+- Keep direct `tel:`, WhatsApp and `mailto:` links as fallbacks beside the Web3Forms quote form.
+- Keep quote submission on Web3Forms; do not add a custom API or database to the frontend.
 
 Before completing frontend work:
 
