@@ -130,11 +130,18 @@ describe("hero and services", () => {
     render(<Services />);
 
     expect(screen.getAllByRole("link")).toHaveLength(SERVICES.length);
-    SERVICES.forEach((service) => {
+    SERVICES.forEach((service, index) => {
       const card = screen.getByTestId(`service-card-${service.id}`);
       expect(card).toHaveAttribute("href", "#contact");
       expect(card).toHaveAccessibleName(`Enquire about ${service.title}`);
       expect(card).toHaveTextContent(service.title);
+
+      const expectedIndex = String(index + 1).padStart(2, "0");
+      const indexEl = screen.getByTestId(`service-index-${service.id}`);
+      expect(indexEl).toHaveTextContent(expectedIndex);
+
+      const img = card.querySelector("img");
+      expect(img).toHaveAttribute("src", service.image);
     });
   });
 });
