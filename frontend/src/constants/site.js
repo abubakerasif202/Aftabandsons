@@ -18,7 +18,11 @@ export const SITE = {
 };
 
 export const IMAGES = {
-  hero: "/assets/fleet-convoy.jpg",
+  hero: "/assets/hero-bdouble-convoy.webp",
+  heroJpg: "/assets/hero-bdouble-convoy.jpg",
+  chassis: "/assets/fleet-chassis-engineering.webp",
+  safetyInspection: "/assets/safety-road-inspection.webp",
+  contactDusk: "/assets/contact-highway-dusk.webp",
   signature: "/assets/fleet-outback.jpg",
   owner1: "/assets/owner-1.webp",
   owner2: "/assets/owner-2.webp",
@@ -30,28 +34,28 @@ export const SERVICES = [
     title: "Truck Transport",
     description:
       "Prime-mover transport for commercial freight from pickup through delivery.",
-    image: "/assets/fleet-depot.jpg",
+    image: "/assets/service-truck-transport.webp",
   },
   {
     id: "b-double-freight",
     title: "B-Double Freight",
     description:
       "B-double combinations for high-volume freight and Australian linehaul work.",
-    image: "/assets/fleet-lineup.jpg",
+    image: "/assets/service-b-double.webp",
   },
   {
     id: "local-deliveries",
     title: "Local Deliveries",
     description:
       "Local delivery transport for businesses moving commercial freight.",
-    image: "/assets/fleet-local.jpg",
+    image: "/assets/service-local-deliveries.webp",
   },
   {
     id: "interstate-freight",
     title: "Interstate Freight",
     description:
       "Long-haul interstate transport for business freight across Australian roads.",
-    image: "/assets/fleet-interstate.jpg",
+    image: "/assets/service-interstate-freight.webp",
   },
 ];
 

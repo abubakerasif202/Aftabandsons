@@ -469,4 +469,103 @@ describe("safety and reliability standards", () => {
   });
 });
 
+describe("SEO, crawlability, and semantic landmarks", () => {
+  test("renders all semantic landmark elements (header, main, footer, section)", () => {
+    const { container } = render(<App />);
+
+    expect(screen.getByRole("banner")).toBeInTheDocument(); // <header>
+    expect(screen.getByRole("main")).toBeInTheDocument(); // <main>
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument(); // <footer>
+
+    // Exactly one H1 on the page
+    const h1Elements = screen.getAllByRole("heading", { level: 1 });
+    expect(h1Elements).toHaveLength(1);
+    expect(h1Elements[0]).toHaveAttribute("data-testid", "hero-headline");
+
+    // Sections for all major areas
+    const sections = container.querySelectorAll("section");
+    expect(sections.length).toBeGreaterThanOrEqual(6);
+    expect(container.querySelector("#home")).toBeInTheDocument();
+    expect(container.querySelector("#services")).toBeInTheDocument();
+    expect(container.querySelector("#fleet")).toBeInTheDocument();
+    expect(container.querySelector("#routes")).toBeInTheDocument();
+    expect(container.querySelector("#safety")).toBeInTheDocument();
+    expect(container.querySelector("#about")).toBeInTheDocument();
+    expect(container.querySelector("#contact")).toBeInTheDocument();
+  });
+
+  test("verifies footer has valid active anchors and no dead routes", () => {
+    const { container } = render(<App />);
+    const footerNav = screen.getByTestId("footer-nav");
+    const links = footerNav.querySelectorAll("a");
+
+    expect(links.length).toBeGreaterThanOrEqual(4);
+    links.forEach((link) => {
+      const href = link.getAttribute("href");
+      expect(href.startsWith("#")).toBe(true);
+      // Ensure target element exists in document
+      const targetId = href.replace("#", "");
+      expect(container.querySelector(`#${targetId}`)).not.toBeNull();
+    });
+  });
+
+  test("verifies public HTML contains valid SEO tags and structured data", () => {
+    const fs = require("fs");
+    const path = require("path");
+
+    const htmlPath = path.resolve(__dirname, "../public/index.html");
+    const html = fs.readFileSync(htmlPath, "utf8");
+
+    // Document title
+    expect(html).toMatch(/<title>Aftab &amp; Sons Transport \| Australian Road &amp; Interstate Freight<\/title>/);
+
+    // Meta description
+    expect(html).toMatch(/<meta\s+name="description"\s+content="[^"]*Aftab &amp; Sons Transport[^"]*"/);
+
+    // Canonical tag
+    expect(html).toMatch(/<link\s+rel="canonical"\s+href="https:\/\/www\.aftabandsons\.com\.au\/"\s*\/>/);
+
+    // Robots meta
+    expect(html).toMatch(/<meta\s+name="robots"\s+content="index,\s*follow/);
+
+    // Structured data JSON-LD parse
+    const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+    expect(jsonLdMatch).not.toBeNull();
+    const data = JSON.parse(jsonLdMatch[1]);
+    expect(data["@context"]).toBe("https://schema.org");
+    expect(data["@graph"]).toBeDefined();
+
+    const graph = data["@graph"];
+    const org = graph.find(
+      (item) =>
+        item["@type"] === "Organization" ||
+        (Array.isArray(item["@type"]) && item["@type"].includes("Organization")),
+    );
+    expect(org).toBeDefined();
+    expect(org.telephone).toBe("+61448747518");
+    expect(org.email).toBe("admin@aftabandsons.com.au");
+
+    const website = graph.find((item) => item["@type"] === "WebSite");
+    expect(website).toBeDefined();
+    expect(website.url).toBe("https://www.aftabandsons.com.au/");
+
+    const services = graph.filter((item) => item["@type"] === "Service");
+    expect(services).toHaveLength(4);
+  });
+
+  test("verifies robots.txt and sitemap.xml have canonical configuration", () => {
+    const fs = require("fs");
+    const path = require("path");
+
+    const robotsPath = path.resolve(__dirname, "../public/robots.txt");
+    const robots = fs.readFileSync(robotsPath, "utf8");
+    expect(robots).toMatch(/User-agent: \*/);
+    expect(robots).toMatch(/Allow: \//);
+    expect(robots).toMatch(/Sitemap: https:\/\/www\.aftabandsons\.com\.au\/sitemap\.xml/);
+
+    const sitemapPath = path.resolve(__dirname, "../public/sitemap.xml");
+    const sitemap = fs.readFileSync(sitemapPath, "utf8");
+    expect(sitemap).toMatch(/<loc>https:\/\/www\.aftabandsons\.com\.au\/<\/loc>/);
+  });
+});
 

@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Truck, Route, Headphones } from "lucide-react";
+import { ArrowRight, Truck, Route, Headphones, ChevronDown } from "lucide-react";
 import { IMAGES, SITE } from "../constants/site";
 
 const HERO_ATTRIBUTES = [
@@ -34,20 +34,61 @@ const Hero = () => {
       data-testid="hero-section"
       className="relative flex min-h-[100svh] items-center overflow-hidden"
     >
+      {/* Background Image with Cinematic Grade & Camera Push */}
       <div className="absolute inset-0">
-        <img
-          src={IMAGES.hero}
-          alt="Aftab & Sons Transport B-double convoy on an Australian highway at sunset"
-          width="1672"
-          height="941"
-          className="h-full w-full object-cover"
-          fetchPriority="high"
-          decoding="async"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/80 to-[#0A0A0A]/45" />
-        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#0A0A0A] to-transparent" />
+        <motion.div
+          className="h-full w-full"
+          initial={reduce ? false : { scale: 1.05 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 8, ease: "easeOut" }}
+        >
+          <picture className="h-full w-full">
+            <source srcSet={IMAGES.hero} type="image/webp" />
+            <img
+              src={IMAGES.heroJpg || IMAGES.hero}
+              alt="Aftab & Sons Transport B-double convoy on an Australian highway at sunset"
+              width="1376"
+              height="768"
+              className="h-full w-full object-cover object-center"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
+        </motion.div>
+        {/* Layered cinematic gradients for flawless contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/85 to-[#0A0A0A]/40" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent" />
       </div>
 
+      {/* Moving Highway Light Streak Effect */}
+      {!reduce && (
+        <>
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: "100%" }}
+            transition={{
+              duration: 3.8,
+              repeat: Infinity,
+              ease: "linear",
+              delay: 0.8,
+            }}
+            className="pointer-events-none absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#C81010]/70 to-transparent z-[2]"
+          />
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: "100%" }}
+            transition={{
+              duration: 4.5,
+              repeat: Infinity,
+              ease: "linear",
+              delay: 2.2,
+            }}
+            className="pointer-events-none absolute bottom-[1px] inset-x-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent z-[2]"
+          />
+        </>
+      )}
+
+      {/* Kinetic Truck Silhouette Entrance */}
       <motion.div
         data-testid="hero-opening-truck"
         aria-hidden="true"
@@ -78,6 +119,7 @@ const Hero = () => {
         <span className="h-px w-14 bg-gradient-to-r from-[#D4AF37] to-transparent sm:w-24" />
       </motion.div>
 
+      {/* Content Container */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pt-28 pb-20 sm:px-8">
         <motion.div
           {...rise(0.05)}
@@ -101,6 +143,7 @@ const Hero = () => {
           data-testid="hero-headline"
           className="max-w-4xl font-display text-5xl leading-[0.9] tracking-tight text-white uppercase sm:text-7xl md:text-8xl lg:text-9xl"
         >
+          <span className="sr-only">Aftab &amp; Sons Transport — </span>
           Australia
           <br />
           Keeps <span className="text-[#C81010]">Moving</span>
@@ -136,6 +179,7 @@ const Hero = () => {
           </a>
         </motion.div>
 
+        {/* Spec Capability Grid */}
         <motion.ul
           {...rise(0.6)}
           data-testid="hero-attributes"
@@ -163,6 +207,23 @@ const Hero = () => {
             </li>
           ))}
         </motion.ul>
+
+        {/* Subtle Scroll Cue */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.6 }}
+          transition={{ duration: 1, delay: 1.2 }}
+          className="mt-10 hidden sm:flex items-center gap-2 text-xs font-semibold tracking-widest text-[#A1A1AA] uppercase"
+        >
+          <a
+            href="#services"
+            className="inline-flex items-center gap-2 hover:text-[#D4AF37] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#D4AF37]"
+            aria-label="Scroll to services"
+          >
+            <span>Explore Services</span>
+            <ChevronDown className="h-4 w-4 animate-bounce text-[#D4AF37]" />
+          </a>
+        </motion.div>
       </div>
     </section>
   );

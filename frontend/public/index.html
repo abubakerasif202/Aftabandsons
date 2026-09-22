@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0A0A0A" />
     <meta name="color-scheme" content="dark" />
+    <title>Aftab &amp; Sons Transport | Australian Road &amp; Interstate Freight</title>
     <meta
       name="description"
-      content="Aftab & Sons Transport provides truck transport, B-double freight, local deliveries and interstate freight for Australian businesses."
+      content="Aftab &amp; Sons Transport delivers truck transport, B-double linehaul, local deliveries and interstate freight across Australia. Direct dispatch &amp; quick quotes."
     />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
     <link rel="canonical" href="https://www.aftabandsons.com.au/" />
     <link rel="icon" type="image/png" href="%PUBLIC_URL%/assets/favicon.png" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/assets/favicon.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
@@ -29,45 +33,128 @@
       rel="stylesheet"
     />
 
+    <!-- Open Graph / Facebook -->
     <meta property="og:locale" content="en_AU" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Aftab & Sons Transport" />
-    <meta property="og:title" content="Aftab & Sons Transport | Australia Keeps Moving" />
+    <meta property="og:site_name" content="Aftab &amp; Sons Transport" />
+    <meta property="og:title" content="Aftab &amp; Sons Transport | Australian Road &amp; Interstate Freight" />
     <meta
       property="og:description"
-      content="Truck transport, B-double freight, local deliveries and interstate freight for Australian businesses."
+      content="Aftab &amp; Sons Transport delivers truck transport, B-double linehaul, local deliveries and interstate freight across Australia. Direct dispatch &amp; quick quotes."
     />
     <meta property="og:url" content="https://www.aftabandsons.com.au/" />
     <meta
       property="og:image"
       content="https://www.aftabandsons.com.au/assets/fleet-convoy.jpg"
     />
-    <meta property="og:image:alt" content="Aftab & Sons Transport trucks on an Australian highway" />
+    <meta property="og:image:width" content="1672" />
+    <meta property="og:image:height" content="941" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Aftab &amp; Sons Transport B-double convoy on an Australian highway" />
 
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Aftab & Sons Transport | Australia Keeps Moving" />
+    <meta name="twitter:title" content="Aftab &amp; Sons Transport | Australian Road &amp; Interstate Freight" />
     <meta
       name="twitter:description"
-      content="Truck transport and B-double freight for Australian businesses."
+      content="Truck transport, B-double linehaul, local deliveries and interstate freight for Australian businesses."
     />
     <meta
       name="twitter:image"
       content="https://www.aftabandsons.com.au/assets/fleet-convoy.jpg"
     />
+    <meta name="twitter:image:alt" content="Aftab &amp; Sons Transport B-double convoy on an Australian highway" />
 
+    <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Aftab & Sons Transport",
-        "url": "https://www.aftabandsons.com.au/",
-        "email": "mailto:admin@aftabandsons.com.au",
-        "telephone": "+61448747518",
-        "description": "Truck transport, B-double freight, local deliveries and interstate freight for Australian businesses."
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://www.aftabandsons.com.au/#website",
+            "url": "https://www.aftabandsons.com.au/",
+            "name": "Aftab & Sons Transport",
+            "description": "Australian heavy road transport and interstate linehaul freight services.",
+            "inLanguage": "en-AU"
+          },
+          {
+            "@type": ["Organization", "LocalBusiness"],
+            "@id": "https://www.aftabandsons.com.au/#organization",
+            "name": "Aftab & Sons Transport",
+            "alternateName": "Aftab & Sons",
+            "url": "https://www.aftabandsons.com.au/",
+            "logo": {
+              "@type": "ImageObject",
+              "@id": "https://www.aftabandsons.com.au/#logo",
+              "url": "https://www.aftabandsons.com.au/assets/logo-horizontal.webp",
+              "caption": "Aftab & Sons Transport Logo"
+            },
+            "image": "https://www.aftabandsons.com.au/assets/fleet-convoy.jpg",
+            "telephone": "+61448747518",
+            "email": "admin@aftabandsons.com.au",
+            "slogan": "Australia Keeps Moving",
+            "description": "Aftab & Sons Transport provides commercial truck transport, B-double freight, local deliveries and interstate freight across Australia.",
+            "areaServed": {
+              "@type": "Country",
+              "name": "Australia"
+            },
+            "contactPoint": [
+              {
+                "@type": "ContactPoint",
+                "telephone": "+61448747518",
+                "contactType": "customer service",
+                "email": "admin@aftabandsons.com.au",
+                "areaServed": "AU",
+                "availableLanguage": ["en"]
+              }
+            ],
+            "knowsAbout": [
+              "Heavy Road Freight",
+              "B-Double Transport",
+              "Interstate Linehaul",
+              "Commercial Freight Distribution"
+            ]
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.aftabandsons.com.au/#service-truck-transport",
+            "name": "Truck Transport",
+            "serviceType": "Road Freight Transport",
+            "provider": { "@id": "https://www.aftabandsons.com.au/#organization" },
+            "areaServed": { "@type": "Country", "name": "Australia" },
+            "description": "Prime-mover transport for commercial freight from pickup through delivery."
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.aftabandsons.com.au/#service-b-double-freight",
+            "name": "B-Double Freight",
+            "serviceType": "High-Capacity Freight Transport",
+            "provider": { "@id": "https://www.aftabandsons.com.au/#organization" },
+            "areaServed": { "@type": "Country", "name": "Australia" },
+            "description": "B-double combinations for high-volume freight and Australian linehaul work."
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.aftabandsons.com.au/#service-local-deliveries",
+            "name": "Local Deliveries",
+            "serviceType": "Metropolitan Freight Distribution",
+            "provider": { "@id": "https://www.aftabandsons.com.au/#organization" },
+            "areaServed": { "@type": "Country", "name": "Australia" },
+            "description": "Local delivery transport for businesses moving commercial freight."
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.aftabandsons.com.au/#service-interstate-freight",
+            "name": "Interstate Freight",
+            "serviceType": "Interstate Road Transport",
+            "provider": { "@id": "https://www.aftabandsons.com.au/#organization" },
+            "areaServed": { "@type": "Country", "name": "Australia" },
+            "description": "Long-haul interstate transport for business freight across Australian roads."
+          }
+        ]
       }
     </script>
-
-    <title>Aftab &amp; Sons Transport | Australia Keeps Moving</title>
   </head>
   <body>
     <noscript>

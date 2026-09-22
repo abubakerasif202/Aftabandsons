@@ -4,7 +4,7 @@ import Reveal from "./motion/Reveal";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
-import { SERVICE_OPTIONS, SITE } from "../constants/site";
+import { IMAGES, SERVICE_OPTIONS, SITE } from "../constants/site";
 
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 const initialForm = { name: "", email: "", phone: "", service: "", message: "", botcheck: "" };
@@ -94,8 +94,23 @@ const Contact = () => {
   const fieldError = (key) => errors[key] ? <p id={`quote-${key}-error`} data-testid={`quote-${key}-error`} role="alert" className="mt-2 text-xs text-[#FF6464]">{errors[key]}</p> : null;
 
   return (
-    <section id="contact" data-testid="contact-section" className="relative border-t border-[#C0C0C0]/10 bg-[#141414] py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+    <section id="contact" data-testid="contact-section" className="relative border-t border-[#C0C0C0]/10 bg-[#141414] py-24 sm:py-32 overflow-hidden">
+      {/* Atmospheric Dusk Highway Backdrop */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-15" aria-hidden="true">
+        <img
+          src={IMAGES.contactDusk || "/assets/contact-highway-dusk.webp"}
+          alt=""
+          width="1376"
+          height="768"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover object-bottom"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/85 to-[#141414]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-transparent to-[#141414]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
           <Reveal>
             <p className="mb-4 flex items-center gap-3 text-xs font-bold tracking-[0.4em] text-[#D4AF37] uppercase"><span className="h-px w-10 bg-[#D4AF37]" /> Get a Quote</p>

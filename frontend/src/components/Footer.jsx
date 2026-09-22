@@ -36,7 +36,9 @@ const Footer = () => {
             <ul className="mt-6 space-y-3">
               {[
                 { label: "Services", href: "#services" },
-                { label: "Capabilities", href: "#capabilities" },
+                { label: "Fleet", href: "#fleet" },
+                { label: "Routes", href: "#routes" },
+                { label: "Safety", href: "#safety" },
                 { label: "About", href: "#about" },
                 { label: "Request a Quote", href: "#contact" },
               ].map((item) => (

@@ -41,12 +41,12 @@ const FleetShowcase = () => {
               {/* Background Image with Cinematic Industrial Overlays */}
               <div className="absolute inset-0">
                 <img
-                  src={IMAGES.hero || "/assets/fleet-lineup.jpg"}
-                  alt="Aftab & Sons Heavy Chassis Linehaul"
+                  src={IMAGES.chassis || "/assets/fleet-chassis-engineering.webp"}
+                  alt="Aftab & Sons Heavy Chassis Linehaul Engineering"
                   loading="lazy"
                   decoding="async"
-                  width="1672"
-                  height="941"
+                  width="1376"
+                  height="768"
                   className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/70 to-[#0A0A0A]/20" />

@@ -174,6 +174,13 @@ const RoutesNetwork = () => {
                         <stop offset="50%" stopColor="#C81010" stopOpacity="0.8" />
                         <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.8" />
                       </linearGradient>
+                      <filter id="route-glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="3.5" result="blur" />
+                        <feMerge>
+                          <feMergeNode in="blur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
                     </defs>
 
                     {/* Background Grid */}
@@ -189,7 +196,7 @@ const RoutesNetwork = () => {
                             d={pathD}
                             fill="none"
                             stroke="#C0C0C0"
-                            strokeOpacity={isHighlighted ? 0.4 : 0.15}
+                            strokeOpacity={isHighlighted ? 0.45 : 0.15}
                             strokeWidth="2"
                             strokeDasharray="4 6"
                           />
@@ -199,7 +206,8 @@ const RoutesNetwork = () => {
                             fill="none"
                             stroke={isHighlighted ? "#D4AF37" : "#C81010"}
                             strokeOpacity={isHighlighted ? 1 : 0.45}
-                            strokeWidth={isHighlighted ? "3.5" : "2"}
+                            strokeWidth={isHighlighted ? "4" : "2"}
+                            filter={isHighlighted ? "url(#route-glow)" : undefined}
                             className="transition-all duration-300"
                           />
                         </g>

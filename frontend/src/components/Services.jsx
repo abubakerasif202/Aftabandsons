@@ -40,8 +40,8 @@ const Services = () => (
                   alt={`Aftab & Sons Transport — ${service.title}`}
                   loading="lazy"
                   decoding="async"
-                  width="1672"
-                  height="941"
+                  width="1200"
+                  height="900"
                   sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
                 />
