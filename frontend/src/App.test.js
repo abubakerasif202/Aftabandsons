@@ -210,6 +210,31 @@ describe("contact options and quote submission", () => {
     expect(screen.getByTestId("contact-email-button")).toHaveTextContent(SITE.email);
     expect(document.body.textContent).not.toMatch(/555[-\s)]|your@email|example\.com\.au/i);
   });
+
+  test("verifies sharp styling for inputs, submit button, and verified direct channels", () => {
+    render(<Contact />);
+
+    const submitBtn = screen.getByRole("button", { name: "Send Quote Request" });
+    expect(submitBtn.className).toContain("rounded-none");
+    expect(submitBtn.className).toContain("bg-[#C81010]");
+
+    const nameInput = screen.getByRole("textbox", { name: /^Name/ });
+    expect(nameInput.className).toContain("rounded-none");
+    expect(nameInput.className).toContain("bg-[#141414]");
+    expect(nameInput.className).toContain("focus:border-[#D4AF37]");
+
+    const callBtn = screen.getByTestId("contact-call-button");
+    expect(callBtn.className).toContain("rounded-none");
+    expect(callBtn.className).toContain("border-[#C0C0C0]/15");
+
+    const whatsappBtn = screen.getByTestId("contact-whatsapp-button");
+    expect(whatsappBtn).toHaveAttribute("href", SITE.whatsappHref);
+    expect(whatsappBtn.className).toContain("rounded-none");
+
+    const emailBtn = screen.getByTestId("contact-email-button");
+    expect(emailBtn).toHaveAttribute("href", `mailto:${SITE.email}`);
+    expect(emailBtn.className).toContain("rounded-none");
+  });
 });
 
 describe("central data constants", () => {
