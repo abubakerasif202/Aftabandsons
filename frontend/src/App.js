@@ -10,6 +10,7 @@ import Signature from "@/components/Signature";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import MobileActions from "@/components/MobileActions";
+import OpeningIntro from "@/components/OpeningIntro";
 
 const LandingPage = () => (
   <div className="min-h-screen bg-[#0A0A0A] pb-28 text-white antialiased xl:pb-0">
@@ -32,6 +33,7 @@ const LandingPage = () => (
 function App() {
   return (
     <div className="App grain">
+      <OpeningIntro />
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>

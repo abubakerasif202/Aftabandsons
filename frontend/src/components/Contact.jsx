@@ -1,313 +1,170 @@
-import { useState } from "react";
-import { Mail, MessageCircle, Phone, Send } from "lucide-react";
+import { useRef, useState } from "react";
+import { CheckCircle2, ChevronDown, Loader2, Mail, MessageCircle, Phone, Send } from "lucide-react";
 import Reveal from "./motion/Reveal";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
 import { SERVICE_OPTIONS, SITE } from "../constants/site";
 
-const WEB3FORMS_ACCESS_KEY = "b0b1f017-828a-4355-83ae-4b852e0cc740";
-
-const FIELD_ERRORS = {
-  name: "Enter your name so we know who to contact.",
-  phone: "Enter a phone number so we can discuss the freight details.",
-  email: "Enter a valid email address.",
-  service: "Choose the service that best fits your freight.",
-  message: "Tell us what needs moving, including pickup, delivery and timing.",
-};
-
-const inputClass =
-  "min-h-12 w-full rounded-none border bg-[#141414] px-4 text-base text-white outline-none transition-colors placeholder:text-[#71717A] focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]";
-
-const directContactLinkClass =
-  "group relative flex min-h-20 items-center gap-4 rounded-none border border-[#C0C0C0]/15 bg-[#141414] px-6 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#D4AF37] hover:bg-[#141414]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]";
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+const initialForm = { name: "", email: "", phone: "", service: "", message: "", botcheck: "" };
+const directContactLinkClass = "group relative flex min-h-20 items-center gap-4 rounded-none border border-[#C0C0C0]/20 bg-[#141414]/60 px-6 py-5 transition-all duration-200 hover:translate-x-1 hover:border-[#D4AF37] hover:bg-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]";
 
 const Contact = () => {
-  const [submissionStatus, setSubmissionStatus] = useState("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState("idle");
+  const [submitError, setSubmitError] = useState("");
+  const submittingRef = useRef(false);
 
-  const validateField = (field) => {
-    if (!field.name || !FIELD_ERRORS[field.name]) return "";
-    return field.validity.valid ? "" : FIELD_ERRORS[field.name];
+  const updateField = (key) => (event) => {
+    setForm((current) => ({ ...current, [key]: event.target.value }));
+    setErrors((current) => ({ ...current, [key]: undefined }));
+    setSubmitError("");
+    if (status === "sent") setStatus("idle");
   };
 
-  const handleBlur = (event) => {
-    const { currentTarget: field } = event;
-    setFieldErrors((current) => ({
-      ...current,
-      [field.name]: validateField(field),
-    }));
+  const validate = () => {
+    const nextErrors = {};
+    const name = form.name.trim();
+    const email = form.email.trim();
+    const phone = form.phone.trim();
+    const message = form.message.trim();
+    if (name.length < 2) nextErrors.name = "Please enter your name.";
+    else if (name.length > 120) nextErrors.name = "Name cannot exceed 120 characters.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) nextErrors.email = "Please enter a valid email address.";
+    else if (email.length > 254) nextErrors.email = "Email cannot exceed 254 characters.";
+    if (phone && !/^[\d\s+\-()]{6,40}$/.test(phone)) nextErrors.phone = "Please enter a valid phone number or leave it blank.";
+    if (!SERVICE_OPTIONS.includes(form.service)) nextErrors.service = "Please choose a service.";
+    if (message.length < 10) nextErrors.message = "Please add at least 10 characters about your freight.";
+    else if (message.length > 4000) nextErrors.message = "Message cannot exceed 4,000 characters.";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = async (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    const fields = Array.from(form.elements).filter(
-      (element) => element.name in FIELD_ERRORS,
-    );
-    const nextFieldErrors = Object.fromEntries(
-      fields.map((field) => [field.name, validateField(field)]),
-    );
-
-    if (Object.values(nextFieldErrors).some(Boolean)) {
-      setFieldErrors(nextFieldErrors);
-      setSubmissionStatus("idle");
-      fields.find((field) => nextFieldErrors[field.name])?.focus();
+    if (submittingRef.current || !validate()) return;
+    if (form.botcheck) {
+      setForm(initialForm);
+      setStatus("sent");
+      return;
+    }
+    const accessKey = process.env.REACT_APP_WEB3FORMS_ACCESS_KEY || process.env.REACT_APP_WEB3FORMS_KEY || SITE.web3formsKey;
+    if (!accessKey) {
+      setSubmitError("The quote form is not configured yet. Please call or email us instead.");
       return;
     }
 
-    const formData = new FormData(form);
-    formData.append("access_key", WEB3FORMS_ACCESS_KEY);
-    formData.append("subject", "Website quote request");
-
-    setSubmissionStatus("sending");
-    setErrorMessage("");
-
+    submittingRef.current = true;
+    setStatus("sending");
+    setSubmitError("");
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: form.name.trim(), email: form.email.trim(),
+          phone: form.phone.trim() || "Not provided", service: form.service,
+          message: form.message.trim(), botcheck: form.botcheck,
+          subject: `New Freight Quote Enquiry - ${form.service}`,
+          from_name: "Aftab & Sons Transport Website",
+        }),
       });
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Unable to send your quote request.");
-      }
-
-      form.reset();
-      setFieldErrors({});
-      setSubmissionStatus("success");
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) throw new Error(result.message || "Web3Forms could not send the enquiry.");
+      setForm(initialForm);
+      setErrors({});
+      setStatus("sent");
     } catch (error) {
-      setErrorMessage(
-        error.message || "Something went wrong. Please check your connection and try again.",
-      );
-      setSubmissionStatus("error");
+      setStatus("idle");
+      setSubmitError(error.name === "AbortError" ? "The request timed out. Please try again or call us directly." : error.message || "Your enquiry could not be sent. Please try again.");
+    } finally {
+      clearTimeout(timeoutId);
+      submittingRef.current = false;
     }
   };
 
-  const fieldProps = (name) => ({
-    "aria-describedby": fieldErrors[name] ? `${name}-error` : undefined,
-    "aria-invalid": Boolean(fieldErrors[name]),
-    className: `${inputClass} ${
-      fieldErrors[name] ? "border-[#E16B6B]" : "border-[#C0C0C0]/20"
-    }`,
-    name,
-    onBlur: handleBlur,
-    required: true,
-  });
+  const inputClass = "mt-2 rounded-none border-[#C0C0C0]/20 bg-[#141414] text-white placeholder:text-[#A1A1AA]/60 transition-colors duration-200 focus-visible:border-[#C81010] focus-visible:ring-1 focus-visible:ring-[#C81010] focus-visible:ring-offset-0";
+  const labelClass = "text-xs font-bold tracking-[0.2em] text-[#C0C0C0] uppercase";
+  const fieldError = (key) => errors[key] ? <p id={`quote-${key}-error`} data-testid={`quote-${key}-error`} role="alert" className="mt-2 text-xs text-[#FF6464]">{errors[key]}</p> : null;
 
   return (
-    <section
-      id="contact"
-      data-testid="contact-section"
-      className="relative bg-[#0A0A0A] border-t border-[#C0C0C0]/15 py-24 sm:py-32"
-    >
+    <section id="contact" data-testid="contact-section" className="relative border-t border-[#C0C0C0]/10 bg-[#141414] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-start">
-          {/* Left Column: Eyebrow, Headline, Narrative, Direct Contact Options */}
-          <div className="lg:col-span-5 flex flex-col">
-            <Reveal>
-              <p
-                data-testid="contact-eyebrow"
-                className="mb-4 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.4em] text-[#D4AF37]"
-              >
-                <span className="h-px w-10 bg-[#D4AF37]" aria-hidden="true" />
-                Direct Freight Enquiry
-              </p>
-              <h2
-                data-testid="contact-heading"
-                className="font-display text-4xl sm:text-5xl md:text-6xl tracking-wide text-white uppercase"
-              >
-                Request a Freight Quote
-              </h2>
-              <p className="mt-4 sm:mt-6 text-base leading-relaxed text-[#A1A1AA]">
-                Tell us what you need moved, where it is going and when you need
-                it transported. Contact Aftab &amp; Sons Transport directly about
-                your freight requirements.
-              </p>
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+          <Reveal>
+            <p className="mb-4 flex items-center gap-3 text-xs font-bold tracking-[0.4em] text-[#D4AF37] uppercase"><span className="h-px w-10 bg-[#D4AF37]" /> Get a Quote</p>
+            <h2 data-testid="contact-heading" className="font-display text-5xl tracking-wide text-white uppercase sm:text-6xl">Let&apos;s Move Your Freight</h2>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-[#A1A1AA]">Tell us what you need moved, where it is going and when you need it transported.</p>
 
-              <div
-                data-testid="contact-direct-panel"
-                className="mt-8 border-l-2 border-[#C81010] bg-[#141414] p-6 sm:p-8"
-              >
-                <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#D4AF37]">
-                  Direct Contact Channels
-                </p>
-                <p className="mt-2 text-lg font-semibold text-white">
-                  Direct access to dispatch and operations.
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-[#A1A1AA]">
-                  Prefer to speak directly? Call, message, or email us using the verified channels below.
-                </p>
-
-                <div className="mt-6 space-y-4">
-                  <a
-                    href={SITE.phoneHref}
-                    data-testid="contact-call-button"
-                    className={directContactLinkClass}
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border border-[#C0C0C0]/20 bg-[#0A0A0A] transition-colors group-hover:border-[#D4AF37]">
-                      <Phone className="h-5 w-5 text-[#D4AF37] transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <span className="block text-xs font-bold uppercase tracking-[0.2em] text-[#A1A1AA]">Call Us</span>
-                      <span className="block text-lg font-semibold text-white">{SITE.phoneDisplay}</span>
-                    </div>
-                  </a>
-
-                  <a
-                    href={SITE.whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-testid="contact-whatsapp-button"
-                    className={directContactLinkClass}
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border border-[#C0C0C0]/20 bg-[#0A0A0A] transition-colors group-hover:border-[#D4AF37]">
-                      <MessageCircle className="h-5 w-5 text-[#D4AF37] transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <span className="block text-xs font-bold uppercase tracking-[0.2em] text-[#A1A1AA]">WhatsApp</span>
-                      <span className="block text-lg font-semibold text-white">Message us directly</span>
-                    </div>
-                  </a>
-
-                  <a
-                    href={`mailto:${SITE.email}`}
-                    data-testid="contact-email-button"
-                    className={directContactLinkClass}
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border border-[#C0C0C0]/20 bg-[#0A0A0A] transition-colors group-hover:border-[#D4AF37]">
-                      <Mail className="h-5 w-5 text-[#D4AF37] transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <span className="block text-xs font-bold uppercase tracking-[0.2em] text-[#A1A1AA]">Email Us</span>
-                      <span className="block break-all text-base font-semibold text-white sm:text-lg">{SITE.email}</span>
-                    </div>
-                  </a>
+            <form data-testid="quote-form" onSubmit={onSubmit} noValidate className="mt-10 space-y-6">
+              <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                <Label htmlFor="quote-botcheck">Website</Label>
+                <Input id="quote-botcheck" name="botcheck" value={form.botcheck} onChange={updateField("botcheck")} tabIndex={-1} autoComplete="off" />
+              </div>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div>
+                  <Label htmlFor="quote-name" className={labelClass}>Name <span className="text-[#FF6464]">*</span></Label>
+                  <Input id="quote-name" name="name" data-testid="quote-name-input" value={form.name} onChange={updateField("name")} placeholder="Your name" autoComplete="name" maxLength={120} required className={inputClass} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "quote-name-error" : undefined} />
+                  {fieldError("name")}
+                </div>
+                <div>
+                  <Label htmlFor="quote-email" className={labelClass}>Email <span className="text-[#FF6464]">*</span></Label>
+                  <Input id="quote-email" name="email" type="email" data-testid="quote-email-input" value={form.email} onChange={updateField("email")} placeholder="you@company.com.au" autoComplete="email" maxLength={254} required className={inputClass} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "quote-email-error" : undefined} />
+                  {fieldError("email")}
                 </div>
               </div>
-
-              <p className="mt-8 border-t border-[#C0C0C0]/10 pt-4 text-xs leading-relaxed text-[#71717A]">
-                {SITE.line2}
-              </p>
-            </Reveal>
-          </div>
-
-          {/* Right Column: Quote Form Card */}
-          <div className="lg:col-span-7">
-            <Reveal delay={0.15}>
-              <div className="rounded-none border border-[#C0C0C0]/15 bg-[#141414] p-6 sm:p-10 shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
-                <div className="border-b border-[#C0C0C0]/10 pb-6 mb-8">
-                  <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#D4AF37]">
-                    Online Consignment Enquiry
-                  </span>
-                  <h3 className="mt-2 font-display text-2xl sm:text-3xl tracking-wide text-white uppercase">
-                    Freight Details
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#A1A1AA]">
-                    Share the basics and we will receive your freight enquiry directly.
-                  </p>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div>
+                  <Label htmlFor="quote-phone" className={labelClass}>Phone</Label>
+                  <Input id="quote-phone" name="phone" type="tel" data-testid="quote-phone-input" value={form.phone} onChange={updateField("phone")} placeholder="Optional" autoComplete="tel" inputMode="tel" maxLength={40} className={inputClass} aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? "quote-phone-error" : undefined} />
+                  {fieldError("phone")}
                 </div>
-
-                <form
-                  data-testid="quote-form"
-                  className="grid gap-5"
-                  noValidate
-                  onSubmit={handleSubmit}
-                  aria-busy={submissionStatus === "sending"}
-                >
-                  <input
-                    type="checkbox"
-                    name="botcheck"
-                    className="hidden"
-                    tabIndex="-1"
-                    autoComplete="off"
-                    aria-hidden="true"
-                  />
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <label className="grid gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C0C0C0]">
-                      Name <span aria-hidden="true" className="text-[#D4AF37]">*</span>
-                      <input {...fieldProps("name")} autoComplete="name" placeholder="Your name" />
-                      {fieldErrors.name && (
-                        <span id="name-error" className="text-xs font-medium normal-case tracking-normal text-[#F2A3A3]">
-                          {fieldErrors.name}
-                        </span>
-                      )}
-                    </label>
-                    <label className="grid gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C0C0C0]">
-                      Phone <span aria-hidden="true" className="text-[#D4AF37]">*</span>
-                      <input {...fieldProps("phone")} type="tel" autoComplete="tel" placeholder="Your phone number" />
-                      {fieldErrors.phone && (
-                        <span id="phone-error" className="text-xs font-medium normal-case tracking-normal text-[#F2A3A3]">
-                          {fieldErrors.phone}
-                        </span>
-                      )}
-                    </label>
-                  </div>
-                  <label className="grid gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C0C0C0]">
-                    Email <span aria-hidden="true" className="text-[#D4AF37]">*</span>
-                    <input {...fieldProps("email")} type="email" autoComplete="email" placeholder="you@example.com" />
-                    {fieldErrors.email && (
-                      <span id="email-error" className="text-xs font-medium normal-case tracking-normal text-[#F2A3A3]">
-                        {fieldErrors.email}
-                      </span>
-                    )}
-                  </label>
-                  <label className="grid gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C0C0C0]">
-                    Service needed <span aria-hidden="true" className="text-[#D4AF37]">*</span>
-                    <select {...fieldProps("service")} defaultValue="" className={`${fieldProps("service").className} cursor-pointer`}>
-                      <option value="" disabled className="bg-[#141414] text-[#71717A]">
-                        Select a service
-                      </option>
-                      {SERVICE_OPTIONS.map((service) => (
-                        <option key={service} value={service} className="bg-[#141414] text-white">
-                          {service}
-                        </option>
-                      ))}
+                <div>
+                  <Label htmlFor="quote-service" className={labelClass}>Service <span className="text-[#FF6464]">*</span></Label>
+                  <div className="relative mt-2">
+                    <select id="quote-service" name="service" data-testid="quote-service-select" value={form.service} onChange={updateField("service")} required aria-invalid={Boolean(errors.service)} aria-describedby={errors.service ? "quote-service-error" : undefined} className="flex h-9 w-full appearance-none rounded-none border border-[#C0C0C0]/20 bg-[#141414] px-3 pr-10 text-sm text-white focus:border-[#C81010] focus:outline-none focus:ring-1 focus:ring-[#C81010]">
+                      <option value="" disabled>Select a service</option>
+                      {SERVICE_OPTIONS.map((service) => <option key={service} value={service}>{service}</option>)}
                     </select>
-                    {fieldErrors.service && (
-                      <span id="service-error" className="text-xs font-medium normal-case tracking-normal text-[#F2A3A3]">
-                        {fieldErrors.service}
-                      </span>
-                    )}
-                  </label>
-                  <label className="grid gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#C0C0C0]">
-                    Freight details <span aria-hidden="true" className="text-[#D4AF37]">*</span>
-                    <textarea
-                      {...fieldProps("message")}
-                      rows="5"
-                      className={`${fieldProps("message").className} min-h-32 py-3`}
-                      placeholder="What needs moving, pickup and delivery locations, and preferred timing."
-                    />
-                    {fieldErrors.message && (
-                      <span id="message-error" className="text-xs font-medium normal-case tracking-normal text-[#F2A3A3]">
-                        {fieldErrors.message}
-                      </span>
-                    )}
-                  </label>
-                  <p className="text-xs leading-relaxed text-[#A1A1AA]">
-                    Fields marked <span className="text-[#D4AF37]">*</span> are required.
-                  </p>
-                  {submissionStatus === "success" && (
-                    <p role="status" className="rounded-none border-l-2 border-[#D4AF37] bg-[#D4AF37]/10 px-4 py-3 text-sm text-white">
-                      Thank you. Your quote request has been sent.
-                    </p>
-                  )}
-                  {submissionStatus === "error" && (
-                    <p role="alert" className="rounded-none border-l-2 border-[#C81010] bg-[#C81010]/10 px-4 py-3 text-sm text-white">
-                      {errorMessage} Please try again, or contact us directly below.
-                    </p>
-                  )}
-                  <button
-                    type="submit"
-                    disabled={submissionStatus === "sending"}
-                    className="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-none bg-[#C81010] px-6 py-3 text-sm font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#A00D0D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A] disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    <Send className="h-4 w-4" aria-hidden="true" />
-                    {submissionStatus === "sending" ? "Sending..." : "Send Quote Request"}
-                  </button>
-                </form>
+                    <ChevronDown className="pointer-events-none absolute top-2.5 right-3 h-4 w-4 text-[#A1A1AA]" aria-hidden="true" />
+                  </div>
+                  {fieldError("service")}
+                </div>
               </div>
-            </Reveal>
-          </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="quote-message" className={labelClass}>Freight Details <span className="text-[#FF6464]">*</span></Label>
+                  <span className="text-[11px] text-[#A1A1AA]">{form.message.length}/4000</span>
+                </div>
+                <Textarea id="quote-message" name="message" data-testid="quote-message-input" value={form.message} onChange={updateField("message")} placeholder="What are you moving, from where to where, and roughly when?" rows={5} minLength={10} maxLength={4000} required className={inputClass} aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "quote-message-error" : undefined} />
+                {fieldError("message")}
+              </div>
+              <button type="submit" data-testid="quote-submit-button" disabled={status === "sending"} className="btn-shine-overlay inline-flex min-h-12 items-center gap-3 bg-[#C81010] px-10 py-4 font-display text-xl tracking-[0.12em] text-white uppercase transition-all duration-200 hover:bg-[#A00D0D] hover:shadow-[0_0_25px_rgba(200,16,16,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#141414] disabled:cursor-not-allowed disabled:opacity-60">
+                {status === "sending" ? <><Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> Sending Enquiry...</> : <><Send className="h-5 w-5" aria-hidden="true" /> Send Enquiry</>}
+              </button>
+              {status === "sent" && <div data-testid="quote-success-message" role="status" className="flex items-center gap-3 border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-4 text-sm text-[#D4AF37]"><CheckCircle2 className="h-5 w-5 shrink-0" aria-hidden="true" /><span>Enquiry received — thank you. We will review your freight details.</span></div>}
+              {submitError && <p data-testid="quote-submit-error" role="alert" className="border border-[#C81010]/40 bg-[#C81010]/10 p-4 text-sm text-[#FFB4B4]">{submitError}</p>}
+            </form>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="flex h-full flex-col justify-center border border-[#C0C0C0]/15 bg-[#0A0A0A] p-8 shadow-[0_12px_40px_rgba(0,0,0,0.6)] sm:p-12">
+              <h3 className="font-display text-3xl tracking-wider text-white uppercase">Prefer to Talk?</h3>
+              <p className="mt-4 text-sm leading-relaxed text-[#A1A1AA]">Call, WhatsApp or email us directly about your freight requirements.</p>
+              <div className="mt-10 space-y-4">
+                <a href={SITE.phoneHref} data-testid="contact-call-button" className={directContactLinkClass}><span className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#C0C0C0]/20 bg-[#0A0A0A] transition-colors group-hover:border-[#D4AF37]"><Phone className="h-5 w-5 text-[#D4AF37]" aria-hidden="true" /></span><span><span className="block text-xs font-bold tracking-[0.25em] text-[#A1A1AA] uppercase">Call Us</span><span className="block text-lg font-semibold text-white">{SITE.phoneDisplay}</span></span></a>
+                <a href={SITE.whatsappHref} target="_blank" rel="noopener noreferrer" data-testid="contact-whatsapp-button" className={directContactLinkClass}><span className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#C0C0C0]/20 bg-[#0A0A0A] transition-colors group-hover:border-[#D4AF37]"><MessageCircle className="h-5 w-5 text-[#D4AF37]" aria-hidden="true" /></span><span><span className="block text-xs font-bold tracking-[0.25em] text-[#A1A1AA] uppercase">WhatsApp</span><span className="block text-lg font-semibold text-white">Message us directly</span></span></a>
+                <a href={`mailto:${SITE.email}`} data-testid="contact-email-button" className={directContactLinkClass}><span className="flex h-11 w-11 shrink-0 items-center justify-center border border-[#C0C0C0]/20 bg-[#0A0A0A] transition-colors group-hover:border-[#D4AF37]"><Mail className="h-5 w-5 text-[#D4AF37]" aria-hidden="true" /></span><span><span className="block text-xs font-bold tracking-[0.25em] text-[#A1A1AA] uppercase">Email Us</span><span className="block break-all text-base font-semibold text-white sm:text-lg">{SITE.email}</span></span></a>
+              </div>
+              <p className="mt-10 border-t border-[#C0C0C0]/10 pt-6 text-sm leading-relaxed text-[#A1A1AA]">{SITE.line2}</p>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>

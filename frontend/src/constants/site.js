@@ -13,6 +13,8 @@ export const SITE = {
   phoneHref: "tel:+61448747518",
   whatsappHref: "https://wa.me/61448747518",
   email: "admin@aftabandsons.com.au",
+  // Public Web3Forms form identifier. A Vercel environment value can override it.
+  web3formsKey: "b0b1f017-828a-4355-83ae-4b852e0cc740",
 };
 
 export const IMAGES = {

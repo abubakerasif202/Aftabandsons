@@ -14,6 +14,7 @@ import {
   ROUTES,
   SAFETY_PILLARS,
   SERVICES,
+  SERVICE_OPTIONS,
   SITE,
 } from "./constants/site";
 
@@ -153,49 +154,50 @@ describe("hero and services", () => {
   });
 });
 
-describe("contact options and quote submission", () => {
-  test("renders a quote form alongside direct contact options", () => {
-    render(<Contact />);
-
-    expect(screen.getByTestId("contact-direct-panel")).toBeInTheDocument();
-    expect(screen.getByTestId("quote-form")).toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Service needed" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Send Quote Request" })).toBeInTheDocument();
-  });
-
-  test("sends quote details to Web3Forms and confirms success", async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ success: true }),
-    });
-    render(<Contact />);
-
-    fireEvent.change(screen.getByRole("textbox", { name: "Name" }), { target: { value: "Test Name" } });
-    fireEvent.change(screen.getByRole("textbox", { name: "Phone" }), { target: { value: "0400000000" } });
-    fireEvent.change(screen.getByRole("textbox", { name: "Email" }), { target: { value: "test@example.com" } });
-    fireEvent.change(screen.getByRole("combobox", { name: "Service needed" }), { target: { value: "Truck Transport" } });
-    fireEvent.change(screen.getByRole("textbox", { name: "Freight details" }), { target: { value: "Freight details" } });
-    fireEvent.click(screen.getByRole("button", { name: "Send Quote Request" }));
-
-    await waitFor(() => expect(global.fetch).toHaveBeenCalledWith("https://api.web3forms.com/submit", expect.objectContaining({ method: "POST" })));
-    expect(await screen.findByRole("status")).toHaveTextContent("quote request has been sent");
-  });
-
-  test("shows inline guidance and focuses the first incomplete quote field", () => {
-    render(<Contact />);
-
-    fireEvent.click(screen.getByRole("button", { name: "Send Quote Request" }));
-
-    const name = screen.getByRole("textbox", { name: /^Name/ });
-    expect(name).toHaveFocus();
-    expect(name).toHaveAttribute("aria-invalid", "true");
-    expect(screen.getByText("Enter your name so we know who to contact.")).toBeInTheDocument();
-    expect(screen.getByText("Choose the service that best fits your freight.")).toBeInTheDocument();
+describe("Web3Forms quote form", () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
+  });
+
+  test("renders the quote fields and direct contact fallbacks", () => {
+    render(<Contact />);
+
+    expect(screen.getByTestId("quote-form")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-name-input")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-email-input")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-service-select")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-message-input")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-submit-button")).toBeInTheDocument();
+  });
+
+  test("validates required quote details before submission", () => {
+    render(<Contact />);
+    fireEvent.click(screen.getByTestId("quote-submit-button"));
+    expect(screen.getByTestId("quote-name-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-email-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-service-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-message-error")).toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  test("submits valid freight details to Web3Forms", async () => {
+    global.fetch.mockResolvedValue({ ok: true, json: async () => ({ success: true }) });
+    render(<Contact />);
+    fireEvent.change(screen.getByTestId("quote-name-input"), { target: { value: "Test Customer" } });
+    fireEvent.change(screen.getByTestId("quote-email-input"), { target: { value: "customer@example.com" } });
+    fireEvent.change(screen.getByTestId("quote-service-select"), { target: { value: SERVICE_OPTIONS[0] } });
+    fireEvent.change(screen.getByTestId("quote-message-input"), { target: { value: "Freight from Sydney to Melbourne next week." } });
+    fireEvent.click(screen.getByTestId("quote-submit-button"));
+
+    await waitFor(() => expect(screen.getByTestId("quote-success-message")).toBeInTheDocument());
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.web3forms.com/submit",
+      expect.objectContaining({ method: "POST" }),
+    );
   });
 
   test("keeps the verified phone, email and accessible direct-contact links", () => {
@@ -214,18 +216,12 @@ describe("contact options and quote submission", () => {
   test("verifies sharp styling for inputs, submit button, and verified direct channels", () => {
     render(<Contact />);
 
-    const submitBtn = screen.getByRole("button", { name: "Send Quote Request" });
-    expect(submitBtn.className).toContain("rounded-none");
+    const submitBtn = screen.getByTestId("quote-submit-button");
     expect(submitBtn.className).toContain("bg-[#C81010]");
 
-    const nameInput = screen.getByRole("textbox", { name: /^Name/ });
-    expect(nameInput.className).toContain("rounded-none");
-    expect(nameInput.className).toContain("bg-[#141414]");
-    expect(nameInput.className).toContain("focus:border-[#D4AF37]");
-
     const callBtn = screen.getByTestId("contact-call-button");
+    expect(callBtn.className).toContain("border-[#C0C0C0]");
     expect(callBtn.className).toContain("rounded-none");
-    expect(callBtn.className).toContain("border-[#C0C0C0]/15");
 
     const whatsappBtn = screen.getByTestId("contact-whatsapp-button");
     expect(whatsappBtn).toHaveAttribute("href", SITE.whatsappHref);

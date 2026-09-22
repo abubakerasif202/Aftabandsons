@@ -10,9 +10,8 @@ Static production website for **Aftab & Sons Transport**.
 - `AGENTS.md` — repository instructions for coding agents
 
 The site is a frontend-only Vercel deployment. There is no database, Python
-runtime, API route or backend environment configuration. Visitors contact the
-business through the verified phone, WhatsApp and email links in the Contact
-section.
+runtime or custom API route. Quote enquiries submit through Web3Forms, with
+verified phone, WhatsApp and email links kept as direct-contact fallbacks.
 
 ## Business contact
 
@@ -37,6 +36,9 @@ yarn start
 ```
 
 Business content remains centralized in `frontend/src/constants/site.js`.
+
+To override the existing Web3Forms form identifier in Vercel, add
+`REACT_APP_WEB3FORMS_ACCESS_KEY` to the project environment and redeploy.
 
 ## Content rules
 
