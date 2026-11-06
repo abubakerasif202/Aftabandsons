@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { SITE } from "../constants/site";
 
 const OpeningIntro = () => {
   const reduce = useReducedMotion();
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const shouldPlayRef = useRef(null);
 
   useEffect(() => {
     if (reduce) {
@@ -12,6 +13,15 @@ const OpeningIntro = () => {
       return undefined;
     }
 
+    if (shouldPlayRef.current === null) {
+      shouldPlayRef.current = true;
+      try {
+        shouldPlayRef.current = !window.sessionStorage.getItem("aftab-intro-seen");
+        window.sessionStorage.setItem("aftab-intro-seen", "1");
+      } catch { /* Storage can be disabled; the short intro remains optional. */ }
+    }
+    if (!shouldPlayRef.current) return undefined;
+    setVisible(true);
     const timer = window.setTimeout(() => setVisible(false), 2000);
     const handleKeyDown = (event) => {
       if (event.key === "Escape") setVisible(false);

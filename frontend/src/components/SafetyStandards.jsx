@@ -14,7 +14,7 @@ const SafetyStandards = () => {
     <section
       id="safety"
       data-testid="safety-section"
-      className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-24 sm:py-32"
+      className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-16 sm:py-24"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         {/* Section Header */}

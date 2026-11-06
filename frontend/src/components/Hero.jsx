@@ -23,7 +23,7 @@ const HERO_ATTRIBUTES = [
 const Hero = () => {
   const reduce = useReducedMotion();
   const rise = (delay) => ({
-    initial: reduce ? false : { opacity: 0, y: 28 },
+    initial: reduce ? false : { opacity: 1, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] },
   });
@@ -38,9 +38,9 @@ const Hero = () => {
       <div className="absolute inset-0">
         <motion.div
           className="h-full w-full"
-          initial={reduce ? false : { scale: 1.05 }}
+          initial={reduce ? false : { scale: 1.03 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 8, ease: "easeOut" }}
+          transition={{ duration: 6, ease: "easeOut" }}
         >
           <picture className="h-full w-full">
             <source srcSet={IMAGES.hero} type="image/webp" />
@@ -56,7 +56,7 @@ const Hero = () => {
           </picture>
         </motion.div>
         {/* Layered cinematic gradients for flawless contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/85 to-[#0A0A0A]/40" />
+        <div className="absolute inset-0 hero-image-shade" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent" />
       </div>
 
@@ -68,7 +68,7 @@ const Hero = () => {
             animate={{ x: "100%" }}
             transition={{
               duration: 3.8,
-              repeat: Infinity,
+              repeat: 0,
               ease: "linear",
               delay: 0.8,
             }}
@@ -79,7 +79,7 @@ const Hero = () => {
             animate={{ x: "100%" }}
             transition={{
               duration: 4.5,
-              repeat: Infinity,
+              repeat: 0,
               ease: "linear",
               delay: 2.2,
             }}

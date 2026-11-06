@@ -181,6 +181,8 @@ describe("Web3Forms quote form", () => {
     expect(screen.getByTestId("quote-email-error")).toBeInTheDocument();
     expect(screen.getByTestId("quote-service-error")).toBeInTheDocument();
     expect(screen.getByTestId("quote-message-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-pickup-error")).toBeInTheDocument();
+    expect(screen.getByTestId("quote-destination-error")).toBeInTheDocument();
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
@@ -191,9 +193,12 @@ describe("Web3Forms quote form", () => {
     fireEvent.change(screen.getByTestId("quote-email-input"), { target: { value: "customer@example.com" } });
     fireEvent.change(screen.getByTestId("quote-service-select"), { target: { value: SERVICE_OPTIONS[0] } });
     fireEvent.change(screen.getByTestId("quote-message-input"), { target: { value: "Freight from Sydney to Melbourne next week." } });
+    fireEvent.change(screen.getByTestId("quote-pickup-input"), { target: { value: "Sydney 2000" } });
+    fireEvent.change(screen.getByTestId("quote-destination-input"), { target: { value: "Melbourne 3000" } });
     fireEvent.click(screen.getByTestId("quote-submit-button"));
 
     await waitFor(() => expect(screen.getByTestId("quote-success-message")).toBeInTheDocument());
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual(expect.objectContaining({ pickup: "Sydney 2000", destination: "Melbourne 3000", service: SERVICE_OPTIONS[0] }));
     expect(global.fetch).toHaveBeenCalledWith(
       "https://api.web3forms.com/submit",
       expect.objectContaining({ method: "POST" }),
@@ -388,10 +393,10 @@ describe("interstate routes network", () => {
       expect(card).toHaveTextContent(route.status);
     });
 
-    expect(screen.getByText("Melbourne <-> Sydney")).toBeInTheDocument();
-    expect(screen.getByText("Sydney <-> Brisbane")).toBeInTheDocument();
-    expect(screen.getByText("Melbourne <-> Adelaide")).toBeInTheDocument();
-    expect(screen.getByText("Regional & Custom")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-melbourne-sydney")).getByText("Melbourne <-> Sydney")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-sydney-brisbane")).getByText("Sydney <-> Brisbane")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-melbourne-adelaide")).getByText("Melbourne <-> Adelaide")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-regional-custom")).getByText("Regional & Custom")).toBeInTheDocument();
   });
 
   test("renders SVG route visualizer with pickup, delivery nodes and respects useReducedMotion", () => {
@@ -569,3 +574,20 @@ describe("SEO, crawlability, and semantic landmarks", () => {
   });
 });
 
+
+test("service enquiry preserves the selected service in the quote form", () => {
+  render(<App />);
+  fireEvent.click(screen.getByTestId("service-card-b-double-freight"));
+  expect(screen.getByTestId("quote-service-select")).toHaveValue("B-Double Freight");
+});
+
+test("routes support persistent keyboard and touch selection", () => {
+  render(<RoutesNetwork />);
+  const card = screen.getByTestId("route-card-sydney-brisbane");
+  fireEvent.keyDown(card, { key: "Enter" });
+  fireEvent.blur(card);
+  expect(card).toHaveAttribute("aria-pressed", "true");
+  fireEvent.click(screen.getByTestId("route-card-melbourne-adelaide"));
+  expect(card).toHaveAttribute("aria-pressed", "false");
+  expect(screen.getByTestId("route-card-melbourne-adelaide")).toHaveAttribute("aria-pressed", "true");
+});

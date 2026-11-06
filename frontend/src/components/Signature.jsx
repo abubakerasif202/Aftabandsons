@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import Reveal from "./motion/Reveal";
 import { IMAGES, SITE } from "../constants/site";
 
 // Signature cinematic moment: parallax outback road with the brand promise.
@@ -38,26 +39,20 @@ const Signature = () => {
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-24 sm:px-8">
-        <motion.div
-          initial={reduce ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+        <Reveal
           className="mb-6 flex items-center gap-3 text-xs font-bold tracking-[0.4em] text-[#D4AF37] uppercase"
         >
           <span className="h-px w-10 bg-[#D4AF37]" />
           <span>{SITE.name}</span>
-        </motion.div>
-        <motion.h2
+        </Reveal>
+        <Reveal delay={0.1}>
+        <h2
           data-testid="signature-headline"
-          initial={reduce ? false : { opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-4xl font-display text-4xl leading-[1.02] tracking-wide text-white uppercase sm:text-6xl md:text-7xl lg:text-8xl"
         >
           {SITE.signatureLine}
-        </motion.h2>
+        </h2>
+        </Reveal>
         <motion.div
           initial={reduce ? false : { width: 0 }}
           whileInView={{ width: "80px" }}

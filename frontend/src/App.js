@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "@/App.css";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -12,23 +13,26 @@ import Footer from "@/components/Footer";
 import MobileActions from "@/components/MobileActions";
 import OpeningIntro from "@/components/OpeningIntro";
 
-const LandingPage = () => (
-  <div className="min-h-screen bg-[#0A0A0A] pb-28 text-white antialiased xl:pb-0">
-    <Header />
-    <main id="main-content" tabIndex="-1">
-      <Hero />
-      <Services />
-      <FleetShowcase />
-      <RoutesNetwork />
-      <SafetyStandards />
-      <Signature />
-      <About />
-      <Contact />
-    </main>
-    <Footer />
-    <MobileActions />
-  </div>
-);
+const LandingPage = () => {
+  const [selectedService, setSelectedService] = useState(null);
+  return (
+    <div className="min-h-screen bg-[#0A0A0A] pb-28 text-white antialiased xl:pb-0">
+      <Header />
+      <main id="main-content" tabIndex="-1">
+        <Hero />
+        <Services onSelectService={(service) => setSelectedService({ service })} />
+        <FleetShowcase />
+        <RoutesNetwork />
+        <SafetyStandards />
+        <Signature />
+        <About />
+        <Contact selectedService={selectedService} />
+      </main>
+      <Footer />
+      <MobileActions />
+    </div>
+  );
+};
 
 function App() {
   return (
