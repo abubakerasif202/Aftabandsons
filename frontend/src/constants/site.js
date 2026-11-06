@@ -70,7 +70,7 @@ export const SERVICE_OPTIONS = [
 export const NAV = [
   { label: "Home", href: "#home" },
   { label: "Fleet & Services", href: "#services" },
-  { label: "Engineering", href: "#fleet" },
+  { label: "Fleet & Maintenance", href: "#fleet" },
   { label: "Interstate Routes", href: "#routes" },
   { label: "Safety & Standards", href: "#safety" },
   { label: "About Us", href: "#about" },
@@ -83,7 +83,7 @@ export const ROUTES = [
     name: "Melbourne <-> Sydney",
     corridor: "Hume Highway Corridor",
     corridorTag: "M31 Linehaul",
-    status: "Active Daily Transit",
+    status: "Enquire for availability",
     transitTime: "Direct Linehaul",
     description:
       "Scheduled commercial linehaul linking Victoria and New South Wales distribution hubs.",
@@ -93,7 +93,7 @@ export const ROUTES = [
     name: "Sydney <-> Brisbane",
     corridor: "Pacific & New England Corridors",
     corridorTag: "M1 / A15 Linehaul",
-    status: "Active Daily Transit",
+    status: "Enquire for availability",
     transitTime: "Direct Linehaul",
     description:
       "Heavy freight connections linking New South Wales logistics facilities with Queensland markets.",
@@ -103,7 +103,7 @@ export const ROUTES = [
     name: "Melbourne <-> Adelaide",
     corridor: "Western Highway Corridor",
     corridorTag: "A8 / National Highway",
-    status: "Active Transit",
+    status: "Enquire for availability",
     transitTime: "Direct Linehaul",
     description:
       "Direct road transport connecting Melbourne commercial terminals with South Australia.",
@@ -113,7 +113,7 @@ export const ROUTES = [
     name: "Regional & Custom",
     corridor: "Australian Highway Network",
     corridorTag: "Point-to-Point",
-    status: "Scheduled On Demand",
+    status: "Custom route enquiry",
     transitTime: "Tailored Corridors",
     description:
       "Flexible commercial transport solutions tailored to specific regional routes and freight demands.",
