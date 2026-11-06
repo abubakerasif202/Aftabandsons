@@ -169,9 +169,9 @@ const Contact = ({ selectedService }) => {
               <fieldset className="border-t border-[#C0C0C0]/15 pt-6">
                 <legend className="pr-3 text-xs font-bold uppercase tracking-widest text-[#D4AF37]">Your freight journey</legend>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  {[{ key: "pickup", label: "Pickup suburb / postcode", required: true }, { key: "destination", label: "Destination suburb / postcode", required: true }, { key: "date", label: "Preferred pickup date", type: "date" }, { key: "load", label: "Weight, pallets / dimensions", placeholder: "Approximate, if known" }].map(({ key, label, required, type, placeholder }) => (
+                  {[{ key: "pickup", label: "Pickup suburb / postcode", required: true }, { key: "destination", label: "Delivery suburb / postcode", required: true }, { key: "date", label: "Preferred pickup date", type: "date" }, { key: "load", label: "Weight, pallets / dimensions", placeholder: "Approximate, if known" }].map(({ key, label, required, type, placeholder }) => (
                     <div key={key}>
-                      <Label htmlFor={`quote-${key}`} className={labelClass}>{label}{required && <span className="text-[#FF6464]"> *</span>}</Label>
+                      <Label htmlFor={`quote-${key}`} className={`${labelClass} block min-h-10`}>{label}{required && <span className="text-[#FF6464]"> *</span>}</Label>
                       <Input id={`quote-${key}`} name={key} data-testid={`quote-${key}-input`} type={type || "text"} value={form[key]} onChange={updateField(key)} required={required} maxLength={key === "load" ? 240 : 160} placeholder={placeholder} className={inputClass} aria-invalid={Boolean(errors[key])} aria-describedby={errors[key] ? `quote-${key}-error` : undefined} />
                       {fieldError(key)}
                     </div>
