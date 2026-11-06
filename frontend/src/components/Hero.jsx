@@ -23,7 +23,7 @@ const HERO_ATTRIBUTES = [
 const Hero = () => {
   const reduce = useReducedMotion();
   const rise = (delay) => ({
-    initial: reduce ? false : { opacity: 0, y: 28 },
+    initial: reduce ? false : { opacity: 1, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] },
   });
