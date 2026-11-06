@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, ChevronDown, Loader2, Mail, MessageCircle, Phone, Send } from "lucide-react";
 import Reveal from "./motion/Reveal";
 import { Input } from "./ui/input";
@@ -7,15 +7,22 @@ import { Textarea } from "./ui/textarea";
 import { IMAGES, SERVICE_OPTIONS, SITE } from "../constants/site";
 
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
-const initialForm = { name: "", email: "", phone: "", service: "", message: "", botcheck: "" };
+const initialForm = { name: "", email: "", phone: "", service: "", message: "", botcheck: "", pickup: "", destination: "", date: "", load: "" };
 const directContactLinkClass = "group relative flex min-h-20 items-center gap-4 rounded-none border border-[#C0C0C0]/20 bg-[#141414]/60 px-6 py-5 transition-all duration-200 hover:translate-x-1 hover:border-[#D4AF37] hover:bg-[#141414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]";
 
-const Contact = () => {
+const Contact = ({ selectedService }) => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle");
   const [submitError, setSubmitError] = useState("");
   const submittingRef = useRef(false);
+
+  useEffect(() => {
+    if (!selectedService || !SERVICE_OPTIONS.includes(selectedService.service)) return;
+    setForm(current => ({ ...current, service: selectedService.service }));
+    setErrors(current => ({ ...current, service: undefined }));
+    setStatus("idle");
+  }, [selectedService]);
 
   const updateField = (key) => (event) => {
     setForm((current) => ({ ...current, [key]: event.target.value }));
@@ -38,6 +45,11 @@ const Contact = () => {
     if (!SERVICE_OPTIONS.includes(form.service)) nextErrors.service = "Please choose a service.";
     if (message.length < 10) nextErrors.message = "Please add at least 10 characters about your freight.";
     else if (message.length > 4000) nextErrors.message = "Message cannot exceed 4,000 characters.";
+    ["pickup", "destination"].forEach(key => {
+      if (form[key].trim().length < 2) nextErrors[key] = `Please enter the ${key} suburb or postcode.`;
+      else if (form[key].length > 160) nextErrors[key] = "Please use 160 characters or fewer.";
+    });
+    if (form.load.length > 240) nextErrors.load = "Please use 240 characters or fewer.";
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -70,6 +82,8 @@ const Contact = () => {
           access_key: accessKey,
           name: form.name.trim(), email: form.email.trim(),
           phone: form.phone.trim() || "Not provided", service: form.service,
+          pickup: form.pickup.trim(), destination: form.destination.trim(),
+          preferred_date: form.date || "Flexible / not provided", load_details: form.load.trim() || "Not provided",
           message: form.message.trim(), botcheck: form.botcheck,
           subject: `New Freight Quote Enquiry - ${form.service}`,
           from_name: "Aftab & Sons Transport Website",
@@ -94,7 +108,7 @@ const Contact = () => {
   const fieldError = (key) => errors[key] ? <p id={`quote-${key}-error`} data-testid={`quote-${key}-error`} role="alert" className="mt-2 text-xs text-[#FF6464]">{errors[key]}</p> : null;
 
   return (
-    <section id="contact" data-testid="contact-section" className="relative border-t border-[#C0C0C0]/10 bg-[#141414] py-24 sm:py-32 overflow-hidden">
+    <section id="contact" data-testid="contact-section" className="relative border-t border-[#C0C0C0]/10 bg-[#141414] py-16 sm:py-24 overflow-hidden">
       {/* Atmospheric Dusk Highway Backdrop */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-15" aria-hidden="true">
         <img
@@ -152,6 +166,18 @@ const Contact = () => {
                   {fieldError("service")}
                 </div>
               </div>
+              <fieldset className="border-t border-[#C0C0C0]/15 pt-6">
+                <legend className="pr-3 text-xs font-bold uppercase tracking-widest text-[#D4AF37]">Your freight journey</legend>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  {[{ key: "pickup", label: "Pickup suburb / postcode", required: true }, { key: "destination", label: "Destination suburb / postcode", required: true }, { key: "date", label: "Preferred pickup date", type: "date" }, { key: "load", label: "Weight, pallets / dimensions", placeholder: "Approximate, if known" }].map(({ key, label, required, type, placeholder }) => (
+                    <div key={key}>
+                      <Label htmlFor={`quote-${key}`} className={labelClass}>{label}{required && <span className="text-[#FF6464]"> *</span>}</Label>
+                      <Input id={`quote-${key}`} name={key} data-testid={`quote-${key}-input`} type={type || "text"} value={form[key]} onChange={updateField(key)} required={required} maxLength={key === "load" ? 240 : 160} placeholder={placeholder} className={inputClass} aria-invalid={Boolean(errors[key])} aria-describedby={errors[key] ? `quote-${key}-error` : undefined} />
+                      {fieldError(key)}
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
               <div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="quote-message" className={labelClass}>Freight Details <span className="text-[#FF6464]">*</span></Label>
