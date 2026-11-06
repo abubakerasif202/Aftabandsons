@@ -2,11 +2,11 @@ import { ArrowUpRight } from "lucide-react";
 import Reveal from "./motion/Reveal";
 import { SERVICES } from "../constants/site";
 
-const Services = () => (
+const Services = ({ onSelectService }) => (
   <section
     id="services"
     data-testid="services-section"
-    className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-24 sm:py-32"
+    className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-16 sm:py-24"
   >
     <div className="mx-auto max-w-7xl px-5 sm:px-8">
       <Reveal>
@@ -27,6 +27,7 @@ const Services = () => (
           <Reveal key={service.id} delay={i * 0.1} className="h-full">
             <a
               href="#contact"
+              onClick={() => onSelectService?.(service.title)}
               aria-label={`Enquire about ${service.title}`}
               data-testid={`service-card-${service.id}`}
               className="group relative flex h-full flex-col rounded-none border border-[#C0C0C0]/15 bg-[#141414] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D4AF37]/50 hover:shadow-[0_12px_30px_rgba(0,0,0,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
@@ -43,7 +44,7 @@ const Services = () => (
                   width="1200"
                   height="900"
                   sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-visible:scale-[1.04]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent opacity-90" />
                 <span
