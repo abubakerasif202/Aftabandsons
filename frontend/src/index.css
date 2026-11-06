@@ -33,7 +33,7 @@
 
     html {
         scroll-behavior: smooth;
-        scroll-padding-top: 5rem;
+        scroll-padding-top: 0rem;
         background: #0a0a0a;
         position: relative;
     }
@@ -158,3 +158,14 @@
         border-bottom-color: inherit;
     }
 }
+
+/* Keep contrast behind copy while exposing the branded truck on wide screens. */
+.hero-image-shade { background: linear-gradient(90deg, rgba(10,10,10,.97), rgba(10,10,10,.77) 43%, rgba(10,10,10,.16)); }
+@media (max-width: 767px) { .hero-image-shade { background: linear-gradient(90deg, rgba(10,10,10,.92), rgba(10,10,10,.6)); } }
+#contact input, #contact select { min-height: 44px; }
+@media (prefers-reduced-motion: reduce) {
+  .group:hover img, .group:hover, .group:focus-visible { transform: none !important; }
+}
+
+@keyframes route-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.route-draw { stroke-dasharray: 1; animation: route-draw 1.4s ease-out both; }
