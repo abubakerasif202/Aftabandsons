@@ -7,14 +7,14 @@ const FleetShowcase = () => {
     <section
       id="fleet"
       data-testid="fleet-showcase-section"
-      className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-24 sm:py-32"
+      className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-16 sm:py-24"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         {/* Section Header */}
         <Reveal>
           <p className="mb-4 flex items-center gap-3 text-xs font-bold tracking-[0.4em] text-[#D4AF37] uppercase">
             <span className="h-px w-10 bg-[#D4AF37]" />
-            Meticulous Engineering
+            Fleet &amp; Maintenance
           </p>
           <h2
             data-testid="fleet-showcase-heading"
@@ -23,7 +23,7 @@ const FleetShowcase = () => {
             Engineered for the Long Haul
           </h2>
           <p className="mt-4 max-w-3xl text-base sm:text-lg leading-relaxed text-[#A1A1AA]">
-            Continuous mechanical readiness through premium components, high-grade radial tyres, and heavy-duty chassis assemblies designed for non-stop Australian tarmac.
+            Prime movers and trailer combinations supported by scheduled maintenance, pre-trip checks and load restraint inspections.
           </p>
         </Reveal>
 
