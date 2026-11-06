@@ -393,10 +393,10 @@ describe("interstate routes network", () => {
       expect(card).toHaveTextContent(route.status);
     });
 
-    expect(screen.getByText("Melbourne <-> Sydney")).toBeInTheDocument();
-    expect(screen.getByText("Sydney <-> Brisbane")).toBeInTheDocument();
-    expect(screen.getByText("Melbourne <-> Adelaide")).toBeInTheDocument();
-    expect(screen.getByText("Regional & Custom")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-melbourne-sydney")).getByText("Melbourne <-> Sydney")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-sydney-brisbane")).getByText("Sydney <-> Brisbane")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-melbourne-adelaide")).getByText("Melbourne <-> Adelaide")).toBeInTheDocument();
+    expect(within(screen.getByTestId("route-card-regional-custom")).getByText("Regional & Custom")).toBeInTheDocument();
   });
 
   test("renders SVG route visualizer with pickup, delivery nodes and respects useReducedMotion", () => {
