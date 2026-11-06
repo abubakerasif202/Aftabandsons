@@ -90,6 +90,7 @@ const RoutesNetwork = () => {
                       onBlur={() => setPreviewRouteId(null)}
                       role="button"
                       aria-pressed={activeRouteId === route.id}
+                      aria-label={`Explore ${route.name} corridor`}
                       aria-controls="freight-route-map"
                       onClick={() => setActiveRouteId(route.id)}
                       onKeyDown={(event) => {
@@ -253,6 +254,7 @@ const RoutesNetwork = () => {
                           <animateMotion
                             dur="6s"
                             repeatCount="2"
+                            fill="freeze"
                             path={transitPath}
                           />
                         </circle>
@@ -260,6 +262,7 @@ const RoutesNetwork = () => {
                           <animateMotion
                             dur="6s"
                             repeatCount="2"
+                            fill="freeze"
                             path={transitPath}
                           />
                         </circle>
