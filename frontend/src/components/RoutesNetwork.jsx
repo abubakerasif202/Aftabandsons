@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { useInView, useReducedMotion } from "framer-motion";
 import { Navigation, ArrowRight } from "lucide-react";
 import Reveal from "./motion/Reveal";
 import { ROUTES } from "../constants/site";
@@ -23,7 +23,17 @@ const CORRIDOR_PATHS = {
 const MAIN_LINEHAUL_PATH = "M 170 285 Q 235 245 300 195 Q 345 135 370 75";
 
 const RoutesNetwork = () => {
-  const [activeRouteId, setActiveRouteId] = useState(null);
+  const [activeRouteId, setActiveRouteId] = useState(ROUTES[0].id);
+  const [previewRouteId, setPreviewRouteId] = useState(null);
+  const [pageVisible, setPageVisible] = useState(true);
+  useEffect(() => {
+    const update = () => setPageVisible(!document.hidden);
+    update();
+    document.addEventListener("visibilitychange", update);
+    return () => document.removeEventListener("visibilitychange", update);
+  }, []);
+  const displayRouteId = previewRouteId || activeRouteId;
+  const transitPath = displayRouteId === "regional-custom" ? MAIN_LINEHAUL_PATH : CORRIDOR_PATHS[displayRouteId];
   const reduce = useReducedMotion();
   const visualRef = useRef(null);
   const isVisualInView = useInView(visualRef, { margin: "50px" });
@@ -32,7 +42,7 @@ const RoutesNetwork = () => {
     <section
       id="routes"
       data-testid="routes-section"
-      className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-24 sm:py-32"
+      className="relative bg-[#0A0A0A] border-b border-[#C0C0C0]/15 py-16 sm:py-24"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -50,7 +60,7 @@ const RoutesNetwork = () => {
                 Connecting Australia's Major Freight Hubs
               </h2>
               <p className="mt-6 text-base sm:text-lg leading-relaxed text-[#A1A1AA]">
-                Aftab &amp; Sons Transport operates regular linehaul services connecting the nation's key commercial logistics centres. Whether moving full truckloads or managing scheduled hub-to-hub transits, our highway network delivers dependable consistency.
+                Explore interstate freight corridors and discuss your pickup, destination and load requirements with our team. Availability and scheduling are confirmed for each enquiry.
               </p>
 
               {/* Highway Corridors Callout */}
@@ -66,7 +76,7 @@ const RoutesNetwork = () => {
             {/* Corridor Matrix List mapping over ROUTES */}
             <div className="mt-10 space-y-4">
               {ROUTES.map((route, idx) => {
-                const isActive = activeRouteId === route.id;
+                const isActive = displayRouteId === route.id;
                 const isScheduled = route.status.toLowerCase().includes("demand");
                 const dotColor = isScheduled ? "bg-[#C81010]" : "bg-[#D4AF37]";
 
@@ -74,10 +84,20 @@ const RoutesNetwork = () => {
                   <Reveal key={route.id} delay={0.05 * (idx + 1)}>
                     <div
                       data-testid={`route-card-${route.id}`}
-                      onMouseEnter={() => setActiveRouteId(route.id)}
-                      onMouseLeave={() => setActiveRouteId(null)}
-                      onFocus={() => setActiveRouteId(route.id)}
-                      onBlur={() => setActiveRouteId(null)}
+                      onMouseEnter={() => setPreviewRouteId(route.id)}
+                      onMouseLeave={() => setPreviewRouteId(null)}
+                      onFocus={() => setPreviewRouteId(route.id)}
+                      onBlur={() => setPreviewRouteId(null)}
+                      role="button"
+                      aria-pressed={activeRouteId === route.id}
+                      aria-controls="freight-route-map"
+                      onClick={() => setActiveRouteId(route.id)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setActiveRouteId(route.id);
+                        }
+                      }}
                       tabIndex={0}
                       className={`group relative border p-5 sm:p-6 transition-all duration-200 outline-none rounded-none cursor-pointer ${
                         isActive
@@ -159,6 +179,7 @@ const RoutesNetwork = () => {
                 <div className="relative mt-6 overflow-hidden bg-[#0A0A0A] border border-[#C0C0C0]/10 p-4 sm:p-6">
                   {/* Subtle Grid Pattern in background */}
                   <svg
+                    id="freight-route-map"
                     data-testid="routes-map-svg"
                     viewBox="0 0 460 360"
                     className="w-full h-auto overflow-visible select-none"
@@ -188,7 +209,7 @@ const RoutesNetwork = () => {
 
                     {/* Base Network Lines (All Corridors) */}
                     {Object.entries(CORRIDOR_PATHS).map(([routeId, pathD]) => {
-                      const isHighlighted = activeRouteId === routeId;
+                      const isHighlighted = displayRouteId === routeId;
                       return (
                         <g key={routeId}>
                           {/* Guide path */}
@@ -215,32 +236,31 @@ const RoutesNetwork = () => {
                     })}
 
                     {/* Animated Linehaul Transit Path (Melbourne -> Sydney -> Brisbane) */}
-                    <motion.path
-                      d={MAIN_LINEHAUL_PATH}
+                    <path
+                      className="route-draw"
+                      pathLength="1"
+                      key={displayRouteId}
+                      d={transitPath}
                       fill="none"
                       stroke="#C81010"
                       strokeWidth="2.5"
-                      initial={reduce ? false : { pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 2, ease: "easeInOut" }}
                     />
 
                     {/* Animated transit pulse along highway network: only active when in view and motion is enabled */}
-                    {!reduce && isVisualInView && (
-                      <g data-testid="routes-animated-pulse">
+                    {!reduce && isVisualInView && pageVisible && (
+                      <g key={displayRouteId} data-testid="routes-animated-pulse">
                         <circle r="8" fill="#D4AF37" fillOpacity="0.25">
                           <animateMotion
                             dur="6s"
-                            repeatCount="indefinite"
-                            path={MAIN_LINEHAUL_PATH}
+                            repeatCount="2"
+                            path={transitPath}
                           />
                         </circle>
                         <circle r="4" fill="#D4AF37">
                           <animateMotion
                             dur="6s"
-                            repeatCount="indefinite"
-                            path={MAIN_LINEHAUL_PATH}
+                            repeatCount="2"
+                            path={transitPath}
                           />
                         </circle>
                       </g>
@@ -344,6 +364,10 @@ const RoutesNetwork = () => {
                   </svg>
                 </div>
 
+                <p className="mt-4 text-xs text-[#C0C0C0]" role="status">
+                  Selected corridor: {ROUTES.find(route => route.id === activeRouteId)?.name}. Select a route to explore.
+                </p>
+                <p className="mt-2 text-[11px] text-[#A1A1AA]">Illustrative route network. Moving markers do not represent live vehicle locations.</p>
                 {/* Visualizer Footer Bar */}
                 <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[#C0C0C0]/15 pt-5 text-xs text-[#A1A1AA]">
                   <div className="flex items-center gap-4">
